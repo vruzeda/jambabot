@@ -60,16 +60,12 @@ def post_jamba_to_slack(date):
 	                jamba = jamba.replace("<br>", "\n")
 
         	        if ZUA:
-                	        jamba = jamba.replace("sexta-feira", ":pizza:-feira")
                         	jamba = jamba.replace("Frango supremo", ":sparkles:FRANGO SUPREMO:sparkles: :heart:")
 	                        jamba = jamba.replace("Penne", "Pênis")
-        	                jamba = jamba.replace("Fricassê", "Freakazoid")
-                	        jamba = jamba.replace("Picadinho", "Pecadinho")
                         	jamba = jamba.replace("à milanesa", "ali na mesa")
 	                        jamba = jamba.replace("Fígado", "Fícado")
 				jamba = jamba.replace("à dorê", "adorei")
 				jamba = jamba.replace("Feijoada", "Feijuca :heartmucholoko:")
-				jamba = jamba.replace("Saladas", "Saladas (WHO CARES?)")
 
         	        post_to_slack(jamba)
                 	break
