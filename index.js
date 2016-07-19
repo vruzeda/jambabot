@@ -126,7 +126,7 @@
       postJambaMenuToSlack(debugEnabled, slackResponse);
     } else if (command === "spoiler") {
       postJambaSpoilerToSlack(debugEnabled, slackResponse);
-    } else {
+    } else if (debugEnabled) {
       postHelloWorldToSlack(debugEnabled, slackResponse, slackRequest.body.user_name, command);
     }
   }

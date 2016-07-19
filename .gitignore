@@ -44,4 +44,5 @@ jspm_packages
 
 ### Custom ignores ###
 
+nohup.out
 variables.js
