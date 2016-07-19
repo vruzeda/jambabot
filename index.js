@@ -65,16 +65,12 @@
             jamba = jamba.replace(/<br>/g, '\n');
 
             if (variables.JAMBABOT_ZUA) {
-              jamba = jamba.replace(/sexta-feira/g, ':pizza:-feira');
               jamba = jamba.replace(/Frango supremo/g, ':sparkles:FRANGO SUPREMO:sparkles: :heart:');
               jamba = jamba.replace(/Penne/g, 'Pênis');
-              jamba = jamba.replace(/Fricassê/g, 'Freakazoid');
               jamba = jamba.replace(/Picadinho/g, 'Pecadinho');
               jamba = jamba.replace(/à milanesa/g, 'ali na mesa');
-              jamba = jamba.replace(/Fígado/g, 'Fícado');
               jamba = jamba.replace(/à dorê/g, 'adorei');
               jamba = jamba.replace(/Feijoada/g, 'Feijuca :heartmucholoko:');
-              jamba = jamba.replace(/Saladas/g, 'Saladas (WHO CARES?)');
             }
 
             postToSlack(debugEnabled, slackResponse, jamba);
