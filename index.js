@@ -5,6 +5,8 @@
   var http = require('http');
   var iconvlite = require('iconv-lite');
 
+  var variables = require('./variables.js');
+
   var DEFAULT_ERROR_MESSAGE = 'O site do Jamba está fora do ar :cry:\n\
     Dá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\n\
     Ou liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\
@@ -136,9 +138,9 @@
   app.use(bodyParser.text());
 
   app.post('/trigger', function (slackRequest, slackResponse) {
-    if (slackRequest.body.token === process.env.JAMBABOT_PROD_TOKEN) {
+    if (slackRequest.body.token === variables.JAMBABOT_PROD_TOKEN) {
       processCommand(false, slackRequest, slackResponse);
-    } else if (slackRequest.body.token === process.env.JAMBABOT_DEBUG_TOKEN) {
+    } else if (slackRequest.body.token === variables.JAMBABOT_DEBUG_TOKEN) {
       processCommand(true, slackRequest, slackResponse);
     } else {
       slackResponse.sendStatus(403);
@@ -147,6 +149,7 @@
 
   app.listen(6001, function () {
     console.log('jambabot app listening on port 6001!');
+    console.log('variables: ' + JSON.stringify(variables));
   });
 
 }())

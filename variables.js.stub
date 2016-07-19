@@ -1,0 +1,7 @@
+// The application depends on a file named variables.js
+// This is a stub for it.
+
+module.exports = {
+  JAMBABOT_DEBUG_TOKEN: 'Token for development',
+  JAMBABOT_PROD_TOKEN: 'Token for production'
+};
