@@ -54,12 +54,13 @@ def post_jamba_to_slack(date):
 					jamba = "*AINDA NÃO PEDIU?*\n\n" + jamba
 
 	                	jamba = jamba + "\n\n<https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|Pedir>"
-        	        
+
 			jamba = jamba.replace("<b>", "")
                 	jamba = jamba.replace("</b>", "")
 	                jamba = jamba.replace("<br>", "\n")
 
         	        if ZUA:
+							jamba = jamba.replace("sexta-feira", ":pizza:-feira")
                         	jamba = jamba.replace("Frango supremo", ":sparkles:FRANGO SUPREMO:sparkles: :heart:")
 	                        jamba = jamba.replace("Penne", "Pênis")
                         	jamba = jamba.replace("à milanesa", "ali na mesa")

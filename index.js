@@ -65,6 +65,7 @@
             jamba = jamba.replace(/<br>/g, '\n');
 
             if (variables.JAMBABOT_ZUA) {
+              jamba = jamba.replace(/sexta-feira/g, ':pizza:-feira');
               jamba = jamba.replace(/Frango supremo/g, ':sparkles:FRANGO SUPREMO:sparkles: :heart:');
               jamba = jamba.replace(/Penne/g, 'Pênis');
               jamba = jamba.replace(/Picadinho/g, 'Pecadinho');
