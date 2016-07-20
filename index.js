@@ -35,6 +35,18 @@
       jambaResponse.on('end', function() {
         debug(debugEnabled, jambaSite);
 
+        var months = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
+        if (!jambaSite.includes(months[date.getMonth()])) {
+          postToSlack(debugEnabled, slackResponse, 'O cardápio para ' + date.getDate() + '/' + (date.getMonth() + 1) + ' ainda não está disponível!');
+          return;
+        }
+
+        if (date.getDay() == 0) {
+          // Sunday
+          postToSlack(debugEnabled, slackResponse, 'O Jambalaya não abre de domingos!');
+          return;
+        }
+
         var dateString = 'Dia: ' + date.getDate();
 
         var allJamba = jambaSite.split('<p>');
@@ -44,9 +56,19 @@
 
           if (jamba.includes(dateString)) {
             var today = new Date();
+            today.setHours(0);
+            today.setMinutes(0);
+            today.setSeconds(0);
+            today.setMilliseconds(0);
 
-            if (today.getDate() == date.getDate() && today.getMonth() == date.getMonth() && today.getYear() == date.getYear()) {
-              // Today's menu
+            var tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            if (date.getTime() < today.getTime()) {
+              jamba = '*TOO LATE!* :marco:\n\n' + jamba;
+            } else if (date.getTime() >= tomorrow.getTime()) {
+              jamba = '*SPOILER* :junim:\n\n' + jamba;
+            } else {
               if (10 <= today.getHours() && today.getHours() < 11) {
                 jamba = '*AINDA NÃO PEDIU?*\n\n' + jamba;
               } else if (today.getHours() >= 11) {
@@ -54,11 +76,7 @@
               }
 
               jamba = jamba + '\n\n<https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|Pedir>';
-            } else {
-              // Spoiler's menu
-              jamba = '*SPOILER* :junim:\n\n' + jamba;
             }
-
 
             jamba = jamba.replace(/<b>/g, '');
             jamba = jamba.replace(/<\/b>/g, '');
@@ -79,6 +97,7 @@
           }
         }
 
+        debug(debugEnabled, 'Something went wrong...');
         postToSlack(debugEnabled, slackResponse, 'O cardápio para ' + date.getDate() + '/' + (date.getMonth() + 1) + ' ainda não está disponível!');
       });
 
@@ -90,21 +109,26 @@
     jambaRequest.end();
   }
 
-  function postJambaMenuToSlack(debugEnabled, slackResponse) {
-      var today = new Date();
-      postJambaToSlack(debugEnabled, slackResponse, today);
+  function postJambaMenuToSlack(debugEnabled, slackResponse, date) {
+    if (!date) {
+      date = new Date();
+    }
+
+    postJambaToSlack(debugEnabled, slackResponse, date);
   }
 
-  function postJambaSpoilerToSlack(debugEnabled, slackResponse) {
-    var nextDay = new Date();
-    nextDay.setDate(nextDay.getDate() + 1);
-
-    if (nextDay.getDay() == 0) {
-      // Sunday -> Monday
+  function postJambaSpoilerToSlack(debugEnabled, slackResponse, nextDay) {
+    if (!nextDay) {
+      nextDay = new Date();
       nextDay.setDate(nextDay.getDate() + 1);
-    } else if (nextDay.getDay() == 6) {
-      // Saturday -> Monday
-      nextDay.setDate(nextDay.getDate() + 2);
+
+      if (nextDay.getDay() == 0) {
+        // Sunday -> Monday
+        nextDay.setDate(nextDay.getDate() + 1);
+      } else if (nextDay.getDay() == 6) {
+        // Saturday -> Monday
+        nextDay.setDate(nextDay.getDate() + 2);
+      }
     }
 
     postJambaToSlack(debugEnabled, slackResponse, nextDay);
@@ -117,12 +141,21 @@
   function processCommand(debugEnabled, slackRequest, slackResponse) {
     debug(debugEnabled, JSON.stringify(slackRequest.body));
 
-    var command = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, " ").trim();
+    var command = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
 
-    if (command === "cardapio") {
+    if (/^cardapio$/.test(command)) {
       postJambaMenuToSlack(debugEnabled, slackResponse);
-    } else if (command === "spoiler") {
+    } else if (/^spoiler$/.test(command)) {
       postJambaSpoilerToSlack(debugEnabled, slackResponse);
+    } else if (/^cardapio [0-9]{1,2}\/[0-9]{1,2}$/.test(command) || /^spoiler [0-9]{1,2}\/[0-9]{1,2}$/.test(command)) {
+      var parameters = command.split(' ');
+      var dateComponents = parameters[1].split('/');
+
+      var date = new Date();
+      date.setMonth(parseInt(dateComponents[1]) - 1);
+      date.setDate(parseInt(dateComponents[0]));
+
+      postJambaMenuToSlack(debugEnabled, slackResponse, date);
     } else if (debugEnabled) {
       postHelloWorldToSlack(debugEnabled, slackResponse, slackRequest.body.user_name, command);
     }
