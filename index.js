@@ -80,6 +80,8 @@
 
             jamba = jamba.replace(/<b>/g, '');
             jamba = jamba.replace(/<\/b>/g, '');
+            jamba = jamba.replace(/<font[^>]*>/g, '');
+            jamba = jamba.replace(/<\/font>/g, '');
             jamba = jamba.replace(/<br>/g, '\n');
 
             if (variables.JAMBABOT_ZUA) {
