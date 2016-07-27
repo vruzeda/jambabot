@@ -92,6 +92,7 @@
               jamba = jamba.replace(/à milanesa/g, 'ali na mesa');
               jamba = jamba.replace(/à dorê/g, 'adorei');
               jamba = jamba.replace(/Feijoada/g, 'Feijuca :heartmucholoko:');
+              jamba = jamba.replace(/Nhoque/g, 'Guinóxi');
             }
 
             postToSlack(debugEnabled, slackResponse, jamba);

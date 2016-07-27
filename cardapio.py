@@ -70,6 +70,7 @@ def post_jamba_to_slack(date):
                 jamba = re.sub('Fígado', 'Fícado', jamba)
                 jamba = re.sub('à dorê', 'adorei', jamba)
                 jamba = re.sub('Feijoada', 'Feijuca :heartmucholoko:', jamba)
+                jamba = re.sub('Nhoque', 'Guinóxi')
 
             post_to_slack(jamba)
             break
