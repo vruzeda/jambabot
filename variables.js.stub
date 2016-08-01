@@ -5,5 +5,8 @@ module.exports = {
   JAMBABOT_ZUA: true,
 
   JAMBABOT_DEBUG_TOKEN: 'Token for development',
-  JAMBABOT_PROD_TOKEN: 'Token for production'
+  JAMBABOT_PROD_TOKEN: 'Token for production',
+  
+  GOOGLE_CSE_ID: 'Custom Search Engine ID',
+  GOOGLE_API_KEY: 'Google API Key'
 };
