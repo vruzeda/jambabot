@@ -2,17 +2,9 @@
 
   var bodyParser = require('body-parser');
   var express = require('express');
-  var http = require('http');
-  var iconvlite = require('iconv-lite');
-  var googleImages = require('google-images');
 
   var variables = require('./variables.js');
-
-  var DEFAULT_ERROR_MESSAGE = 'O site do Jamba está fora do ar :cry:\n\
-    Dá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\n\
-    Ou liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\
-    \n\
-    (Ou <#C0HNHSCP9>, fazer o quê :stuck_out_tongue_winking_eye:)';
+  var getJambaPostForDate = require('./scripts/getJambaPostForDate.js');
 
   function debug(debugEnabled) {
     if (debugEnabled) {
@@ -26,91 +18,9 @@
   }
 
   function postJambaToSlack(debugEnabled, slackResponse, date) {
-    var jambaRequest = http.request({ host: 'www.refeicoesjambalaya.com.br', port: 80, path: '/cardapio.asp' }, function(jambaResponse) {
-      var jambaSite = '';
-
-      jambaResponse.on('data', function(chunk) {
-        jambaSite += iconvlite.decode(chunk, 'iso-8859-1');
-      });
-
-      jambaResponse.on('end', function() {
-        debug(debugEnabled, jambaSite);
-
-        var months = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
-        if (!jambaSite.includes(months[date.getMonth()])) {
-          postToSlack(debugEnabled, slackResponse, 'O cardápio para ' + date.getDate() + '/' + (date.getMonth() + 1) + ' ainda não está disponível!');
-          return;
-        }
-
-        if (date.getDay() == 0) {
-          // Sunday
-          postToSlack(debugEnabled, slackResponse, 'O Jambalaya não abre de domingos!');
-          return;
-        }
-
-        var dateString = 'Dia: ' + date.getDate();
-
-        var allJamba = jambaSite.split('<p>');
-        for (var jambaIndex in allJamba) {
-          var jamba = allJamba[jambaIndex];
-          debug(debugEnabled, jamba);
-
-          if (jamba.includes(dateString)) {
-            var today = new Date();
-            today.setHours(0);
-            today.setMinutes(0);
-            today.setSeconds(0);
-            today.setMilliseconds(0);
-
-            var tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-
-            if (date.getTime() < today.getTime()) {
-              jamba = '*TOO LATE!* :marco:\n\n' + jamba;
-            } else if (date.getTime() >= tomorrow.getTime()) {
-              jamba = '*SPOILER* :junim:\n\n' + jamba;
-            } else {
-              if (10 <= today.getHours() && today.getHours() < 11) {
-                jamba = '*AINDA NÃO PEDIU?*\n\n' + jamba;
-              } else if (today.getHours() >= 11) {
-                jamba = '*TOO LATE!* :marco:\n\n' + jamba;
-              }
-
-              jamba = jamba + '\n\n<https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|Pedir>';
-            }
-
-            jamba = jamba.replace(/<b>/g, '');
-            jamba = jamba.replace(/<\/b>/g, '');
-            jamba = jamba.replace(/<font[^>]*>/g, '');
-            jamba = jamba.replace(/<\/font>/g, '');
-            jamba = jamba.replace(/<br>/g, '\n');
-
-            if (variables.JAMBABOT_ZUA) {
-              jamba = jamba.replace(/sexta-feira/g, ':pizza:-feira');
-              jamba = jamba.replace(/Frango supremo/g, ':sparkles:FRANGO SUPREMO:sparkles: :heart:');
-              jamba = jamba.replace(/Penne/g, 'Pênis');
-              jamba = jamba.replace(/Picadinho/g, 'Pecadinho');
-              jamba = jamba.replace(/à milanesa/g, 'ali na mesa');
-              jamba = jamba.replace(/à dorê/g, 'adorei');
-              jamba = jamba.replace(/Feijoada/g, 'Feijuca :heartmucholoko:');
-              jamba = jamba.replace(/Nhoque/g, 'Guinóxi');
-            }
-
-            postToSlack(debugEnabled, slackResponse, jamba);
-            return;
-          }
-        }
-
-        debug(debugEnabled, 'Something went wrong...');
-        postToSlack(debugEnabled, slackResponse, 'O cardápio para ' + date.getDate() + '/' + (date.getMonth() + 1) + ' ainda não está disponível!');
-      });
-
-      jambaResponse.on('error', function() {
-        postToSlack(debugEnabled, slackResponse, DEFAULT_ERROR_MESSAGE);
-      });
+    getJambaPostForDate(date, function(jambaPost) {
+      postToSlack(debugEnabled, slackResponse, jambaPost);
     });
-
-    jambaRequest.end();
   }
 
   function postJambaMenuToSlack(debugEnabled, slackResponse, date) {
@@ -138,24 +48,6 @@
     postJambaToSlack(debugEnabled, slackResponse, nextDay);
   }
 
-  function postJambaFoodSearch(debugEnabled, slackResponse, username, command) {
-	// Removing the word 'busca' from the command
-	var foodSearch = command.substring(6);
-
-	// Searching the image and posting a random result
-	var client = googleImages(variables.GOOGLE_CSE_ID, variables.GOOGLE_API_KEY);
-	client.search(foodSearch).then(function (images) {
-		// 'images' variable returns at max 10 json results
-		var resultsLength = images.length;
-		if(resultsLength > 0) {
-		  var randomResult = images[Math.floor((Math.random() * resultsLength) + 1)];
-		  postToSlack(debugEnabled, slackResponse, randomResult.url)
-		} else {
-			postToSlack(debugEnabled, slackResponse, 'Desculpa ' + username + ', não achei a foto de ' + foodSearch + ' no menu.');
-		}
-	});
-  }
-
   function postHelloWorldToSlack(debugEnabled, slackResponse, username, command) {
     postToSlack(debugEnabled, slackResponse, 'Hello, ' + username + '! You said [' + command + ']');
   }
@@ -178,9 +70,7 @@
       date.setDate(parseInt(dateComponents[0]));
 
       postJambaMenuToSlack(debugEnabled, slackResponse, date);
-    } else if(/^busca .+/.test(command)) {
-	  postJambaFoodSearch(debugEnabled, slackResponse, slackRequest.body.user_name, command)
-	} else if (debugEnabled) {
+    } else if (debugEnabled) {
       postHelloWorldToSlack(debugEnabled, slackResponse, slackRequest.body.user_name, command);
     }
   }
