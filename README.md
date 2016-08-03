@@ -40,13 +40,13 @@ After defining the necessary variables, the script is run using:
 
     $ ./countdown.py
 
-*index.js*
+*jambabot.js*
 
 This script implements a reactive bot, answering to simple requests from users.
 There are currently to commands:
 
-- jambabot cardapio: Replies with today's menu (with some mockery depending on the time it's executed);
-- jambabot spoiler: Replies with tomorrow's menu.
+- jambabot cardapio [date/month]: Replies with today's menu (with some mockery depending on the time it's executed); if a date and month where supplied, it will search for that day's menu;
+- jambabot spoiler [date/month]: Replies with tomorrow's menu; if a date and month where supplied, it will search for that day's menu.
 
 In development, any other command will result in a "Hello, world"-like reply, followed by an echo of the given command.
 
@@ -56,12 +56,14 @@ To run it, you must define a file named "variables.js" with three variables defi
 - JAMBABOT_ZUA: Enables zua, a word mapping algorithm to make the menus more fun (boolean);
 - JAMBABOT_DEBUG_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for debug purposes, printing additional logs;
 - JAMBABOT_PROD_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for production.
+- GOOGLE_API_KEY: You custom Google's API key (used for image obtention, requires "Google Custom Search Engine API" to be enabled)
+- GOOGLE_CSE_ID: You custom Google's search engine ID (used for image obtention, requires "Image search" to be enabled)
 
 There's a stub file that you can use to guide you, "variables.js.stub".
 
 After implementing this file, you can test your script by running:
 
-    $ node index.js
+    $ node jambabot.js
 
 And making a post to it in the format, for example, using curl:
 
