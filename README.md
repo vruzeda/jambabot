@@ -55,9 +55,10 @@ To run it, you must define a file named "variables.js" with three variables defi
 
 - JAMBABOT_ZUA: Enables zua, a word mapping algorithm to make the menus more fun (boolean);
 - JAMBABOT_DEBUG_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for debug purposes, printing additional logs;
-- JAMBABOT_PROD_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for production.
-- GOOGLE_API_KEY: You custom Google's API key (used for image obtention, requires "Google Custom Search Engine API" to be enabled)
-- GOOGLE_CSE_ID: You custom Google's search engine ID (used for image obtention, requires "Image search" to be enabled)
+- JAMBABOT_PROD_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for production;
+- GOOGLE_API_KEY: You custom Google's API key (used for image obtention, requires "Google Custom Search Engine API" to be enabled);
+- GOOGLE_CSE_ID: You custom Google's search engine ID (used for image obtention, requires "Image search" to be enabled);
+- PRE_DEFINED_IMAGES: Map of food name vs. image URLs to be used when looking for an image for a given food.
 
 There's a stub file that you can use to guide you, "variables.js.stub".
 

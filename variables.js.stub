@@ -8,5 +8,9 @@ module.exports = {
   JAMBABOT_PROD_TOKEN: 'Token for production',
 
   GOOGLE_API_KEY: 'Google API Key',
-  GOOGLE_CSE_ID: 'Custom Search Engine ID'
+  GOOGLE_CSE_ID: 'Custom Search Engine ID',
+
+  PRE_DEFINED_IMAGES: {
+    'Food name': 'Food Image URL'
+  }
 };
