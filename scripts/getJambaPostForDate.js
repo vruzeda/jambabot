@@ -51,7 +51,12 @@
         footer = '\n\n<https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|Pedir>';
       }
 
-      var jamba = jambas[date.getDate() - 1];
+      var jamba = jambas[date.getDate()];
+      if (!jamba) {
+        callback('O cardápio para ' + date.getDate() + '/' + (date.getMonth() + 1) + ' não está disponível!');
+        return;
+      }
+
       getImageForMainDishes(jamba.mainDishes, function(images) {
         if (jamba.mainDishes.length > 0) {
           body += 'Pratos principais: ';

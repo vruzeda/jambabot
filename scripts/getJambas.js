@@ -27,7 +27,7 @@
       });
 
       jambaResponse.on('end', function() {
-        var jambas = [];
+        var jambas = {};
 
         var paragraphs = jambaSite.split('<p>');
         for (var day = 0; day < 31; ++day) {
@@ -67,7 +67,7 @@
                   }
                 }
 
-                jambas.push(jamba);
+                jambas[date.getDate()] = jamba;
                 break;
               }
           }
