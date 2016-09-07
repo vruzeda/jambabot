@@ -59,11 +59,11 @@
                 for (var j = 0; j < lines.length; ++j) {
                   var line = lines[j];
                   if (line.includes('Pratos principais: ')) {
-                    jamba.mainDishes = line.substring('Pratos principais: '.length).split(' - ');
+                    jamba.mainDishes = parseJambaLine(line, 'Pratos principais: ');
                   } else if (line.includes('Guarnições: ')) {
-                    jamba.garnishes = line.substring('Guarnições: '.length).split(' - ');
+                    jamba.garnishes = parseJambaLine(line, 'Guarnições: ');
                   } else if (line.includes('Saladas: ')) {
-                    jamba.salads = line.substring('Saladas: '.length).split(' - ');
+                    jamba.salads = parseJambaLine(line, 'Saladas: ');
                   }
                 }
 
@@ -86,6 +86,16 @@
     });
 
     jambaRequest.end();
+  }
+
+  function parseJambaLine(jambaLine, header) {
+    return jambaLine.substring(header.length).split(' - ').reduce(function(foods, lineComponent) {
+      if (lineComponent.length > 0) {
+        foods.push(lineComponent.trim());
+      }
+
+      return foods;
+    }, []);
   }
 
   module.exports = getJambas;
