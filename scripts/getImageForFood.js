@@ -4,7 +4,7 @@
   var googleImages = require('google-images');
 
   function getImageForFood(food, callback) {
-    var preDefinedImage = variables.PRE_DEFINED_IMAGES[food];
+    var preDefinedImage = require('../variables.js').PRE_DEFINED_IMAGES[food];
     if (preDefinedImage) {
       callback(null, preDefinedImage);
       return;
