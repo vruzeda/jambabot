@@ -1,10 +1,9 @@
 (function() {
 
-  var variables = require('../variables.js');
-  var getJambas = require('./getJambas.js');
-  var getImageForFood = require('./getImageForFood.js');
+  var jamba = require('../../integrations/jamba.js');
+  var googleImages = require('../../integrations/googleImages.js');
 
-  function getJambaPostForDate(date, callback) {
+  function getJambaPostForDate(callback, date) {
     // Check if the date is in the current month (and year, just for safety)
     var today = new Date();
     if (date.getMonth() != today.getMonth() || date.getYear() != today.getYear()) {
@@ -18,9 +17,9 @@
       return;
     }
 
-    getJambas(function(error, jambas) {
+    jamba.getJambas(function(error, jambas) {
       if (error) {
-        callback(debugEnabled, 'O site do Jamba está fora do ar :cry:\nDá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\nOu liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\n(Ou <#C0HNHSCP9>, fazer o quê :stuck_out_tongue_winking_eye:)');
+        callback('O site do Jamba está fora do ar :cry:\nDá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\nOu liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\n(Ou <#C0HNHSCP9>, fazer o quê :stuck_out_tongue_winking_eye:)');
         return;
       }
 
@@ -92,7 +91,7 @@
           body += 'Saladas: ' + jamba.salads.join(' - ');
         }
 
-        if (variables.JAMBABOT_ZUA) {
+        if (require('../../variables.js').JAMBABOT_ZUA) {
           body = body.replace(/sexta-feira/g, ':pizza:-feira');
           body = body.replace(/Frango supremo/g, ':sparkles:FRANGO SUPREMO:sparkles: :heart:');
           body = body.replace(/Penne/g, 'Pênis');
@@ -116,7 +115,7 @@
     console.log('Getting image for ' + mainDishes[index] + ' (' + (index + 1) + ' of ' + mainDishes.length + ')');
 
     if (index < mainDishes.length) {
-      getImageForFood(mainDishes[index], function(error, image) {
+      getImage(mainDishes[index], function(error, image) {
         if (error) {
           console.log(error);
         }
@@ -127,6 +126,16 @@
     } else {
       callback(images);
     }
+  }
+
+  function getImage(query, callback) {
+    var preDefinedImage = require('../../variables.js').PRE_DEFINED_IMAGES[query];
+    if (preDefinedImage) {
+      callback(null, preDefinedImage);
+      return;
+    }
+
+    googleImages.getRandomImage(query, callback);
   }
 
   module.exports = getJambaPostForDate;

@@ -46,7 +46,7 @@ This script implements a reactive bot, answering to simple requests from users.
 There are currently to commands:
 
 - jambabot cardapio [date/month]: Replies with today's menu (with some mockery depending on the time it's executed); if a date and month where supplied, it will search for that day's menu;
-- jambabot spoiler [date/month]: Replies with tomorrow's menu; if a date and month where supplied, it will search for that day's menu.
+- jambabot spoiler: Replies with tomorrow's menu.
 
 In development, any other command will result in a "Hello, world"-like reply, followed by an echo of the given command.
 

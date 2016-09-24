@@ -98,6 +98,8 @@
     }, []);
   }
 
-  module.exports = getJambas;
+  module.exports = {
+    getJambas: getJambas
+  };
 
 })();

@@ -3,13 +3,7 @@
   var variables = require('../variables.js');
   var googleImages = require('google-images');
 
-  function getImageForFood(food, callback) {
-    var preDefinedImage = require('../variables.js').PRE_DEFINED_IMAGES[food];
-    if (preDefinedImage) {
-      callback(null, preDefinedImage);
-      return;
-    }
-
+  function getRandomImage(query, callback) {
     if (!variables.GOOGLE_CSE_ID) {
       callback(new Error('GOOGLE_CSE_ID is not defined in variables.js'), undefined);
       return;
@@ -20,7 +14,7 @@
       return;
     }
 
-    googleImages(variables.GOOGLE_CSE_ID, variables.GOOGLE_API_KEY).search(food).then(function(images) {
+    googleImages(variables.GOOGLE_CSE_ID, variables.GOOGLE_API_KEY).search(query).then(function(images) {
       var resultsLength = images.length;
       if (resultsLength > 0) {
         var randomResult = images[Math.floor((Math.random() * resultsLength))];
@@ -33,6 +27,8 @@
     });
   }
 
-  module.exports = getImageForFood;
+  module.exports = {
+    getRandomImage: getRandomImage
+  };
 
 })();
