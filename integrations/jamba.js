@@ -89,7 +89,7 @@
   }
 
   function parseJambaLine(jambaLine, header) {
-    return jambaLine.substring(header.length).split(' - ').reduce(function(foods, lineComponent) {
+    return jambaLine.substring(jambaLine.indexOf(header) + header.length).split(' - ').reduce(function(foods, lineComponent) {
       if (lineComponent.length > 0) {
         foods.push(lineComponent.trim());
       }
