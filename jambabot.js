@@ -1,6 +1,6 @@
 (function() {
 
-var bodyParser = require('body-parser');
+  var bodyParser = require('body-parser');
   var express = require('express');
 
   var variables = require('./variables.js');
