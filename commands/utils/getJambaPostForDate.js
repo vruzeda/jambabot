@@ -1,6 +1,7 @@
 (function() {
 
   var jamba = require('../../integrations/jamba.js');
+  var mongodb = require('../../integrations/mongodb.js');
   var googleImages = require('../../integrations/googleImages.js');
 
   function getJambaPostForDate(callback, date) {
@@ -129,13 +130,14 @@
   }
 
   function getImage(query, callback) {
-    var preDefinedImage = require('../../variables.js').PRE_DEFINED_IMAGES[query];
-    if (preDefinedImage) {
-      callback(null, preDefinedImage);
-      return;
-    }
+    mongodb.getImageForDish(query, function(error, preDefinedImage) {
+      if (preDefinedImage) {
+        callback(null, preDefinedImage);
+        return;
+      }
 
-    googleImages.getRandomImage(query, callback);
+      googleImages.getRandomImage(query, callback);
+    });
   }
 
   module.exports = getJambaPostForDate;
