@@ -7,7 +7,7 @@
 
   function getJambas(callback) {
     var today = new Date();
-    var hash = today.getMonth() + '/' + today.getYear();
+    var hash = `${today.getMonth()}/${today.getYear()}`;
 
     // If we have this month's Jamba cached, use it!
     var cachedJamba = CACHED_JAMBAS[hash];
@@ -42,7 +42,7 @@
           if (date.getMonth() == today.getMonth()) {
             for (var i = 0; i < paragraphs.length; ++i) {
               var paragraph = paragraphs[i];
-              if (paragraph.includes('Dia: ' + day + ' ')) {
+              if (paragraph.includes(`Dia: ${day} `)) {
                 paragraph = paragraph.replace(/<b>/g, '');
                 paragraph = paragraph.replace(/<\/b>/g, '');
                 paragraph = paragraph.replace(/<font[^>]*>/g, '');

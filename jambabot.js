@@ -16,7 +16,7 @@
     if (slackRequest.body.token === variables.JAMBABOT_DEBUG_TOKEN || slackRequest.body.token === variables.JAMBABOT_PROD_TOKEN) {
       var userCommand = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
       parseCommand(function(response) {
-        slackResponse.send('{"text": ' + JSON.stringify(response) + '}');
+        slackResponse.send(`{"text": ${JSON.stringify(response)}}`);
       }, userCommand);
     }
   });

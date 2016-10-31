@@ -8,7 +8,7 @@
     // Check if the date is in the current month (and year, just for safety)
     var today = new Date();
     if (date.getMonth() != today.getMonth() || date.getYear() != today.getYear()) {
-      callback('O cardápio para ' + date.getDate() + '/' + (date.getMonth() + 1) + ' não está disponível!');
+      callback(`O cardápio para ${date.getDate()}/${date.getMonth() + 1} não está disponível!`);
       return;
     }
 
@@ -53,7 +53,7 @@
 
       var jamba = jambas[date.getDate()];
       if (!jamba) {
-        callback('O cardápio para ' + date.getDate() + '/' + (date.getMonth() + 1) + ' não está disponível!');
+        callback(`O cardápio para ${date.getDate()}/${date.getMonth() + 1} não está disponível!`);
         return;
       }
 
@@ -69,7 +69,7 @@
             }
 
             if (image) {
-              body += '<' + image + '|' + mainDish + '>';
+              body += `<${image}|${mainDish}>`;
             } else {
               body += mainDish;
             }
@@ -81,7 +81,7 @@
             body += '\n';
           }
 
-          body += 'Guarnições: ' + jamba.garnishes.join(' - ');
+          body += `Guarnições: ${jamba.garnishes.join(' - ')}`;
         }
 
         if (jamba.salads.length > 0) {
@@ -89,7 +89,7 @@
             body += '\n';
           }
 
-          body += 'Saladas: ' + jamba.salads.join(' - ');
+          body += `Saladas: ${jamba.salads.join(' - ')}`;
         }
 
         if (require('../../variables.js').JAMBABOT_ZUA) {
@@ -113,7 +113,7 @@
   }
 
   function recursivelyGetImageForMainDishes(mainDishes, index, images, callback) {
-    console.log('Getting image for ' + mainDishes[index] + ' (' + (index + 1) + ' of ' + mainDishes.length + ')');
+    console.log(`Getting image for ${mainDishes[index]} (${index + 1} of ${mainDishes.length})`);
 
     if (index < mainDishes.length) {
       getImage(mainDishes[index], function(error, image) {
