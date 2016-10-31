@@ -30,7 +30,7 @@
         var jambas = {};
 
         var paragraphs = jambaSite.split('<p>');
-        for (var day = 0; day < 31; ++day) {
+        for (var day = 0; day <= 31; ++day) {
           var date = new Date();
           date.setDate(day);
           date.setHours(0);
