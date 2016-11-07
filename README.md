@@ -1,7 +1,7 @@
 This repository contains 3 different Slack's bot applications, all relating to Refeições Jambalaya's daily menu.
 Basically, it parses the menu provided in http://www.refeicoesjambalaya.com.br/cardapio.asp and post it to a Slack's channel.
 
-*cardapio.py*
+*cardapio.js*
 
 This script gets the menu and send it to a Slack's channel.
 It has the following behavior:
@@ -10,8 +10,8 @@ It has the following behavior:
 - If it is executed between 10AM and 11AM, it will post today's menu, but with a mocking tone, since it's getting late;
 - If it is executed between 11AM and 24PM, it will post the spoiler for tomorrow's menu.
 
-This script was written using python3.
-To run it, you should have 3 environment variables defined:
+This script was written for run in NodeJS using JavaScript.
+To run it, you must define a file named "variables.js" with three variables defined:
 
 - JAMBABOT_DEBUG: Enables debug logs, and makes the script post to the debug channel (it should be either 'True' or 'False');
 - JAMBABOT_ZUA: Enables zua, a word mapping algorithm to make the menus more fun (it should be either 'True' or 'False');
@@ -20,7 +20,7 @@ To run it, you should have 3 environment variables defined:
 
 After defining the necessary variables, the script is run using:
 
-    $ ./cardapio.py
+    $ ./cardapio.js
 
 *countdown.py*
 

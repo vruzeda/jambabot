@@ -4,13 +4,13 @@
 module.exports = {
   JAMBABOT_ZUA: true,
 
+  JAMBABOT_DEBUG: false,
+  JAMBABOT_DEBUG_URL: 'URL for development',
+  JAMBABOT_PROD_URL: 'URL for production',
+
   JAMBABOT_DEBUG_TOKEN: 'Token for development',
   JAMBABOT_PROD_TOKEN: 'Token for production',
 
   GOOGLE_API_KEY: 'Google API Key',
-  GOOGLE_CSE_ID: 'Custom Search Engine ID',
-
-  PRE_DEFINED_IMAGES: {
-    'Food name': 'Food Image URL'
-  }
+  GOOGLE_CSE_ID: 'Custom Search Engine ID'
 };
