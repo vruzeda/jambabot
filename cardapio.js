@@ -7,6 +7,10 @@ var cardapio = require('./commands/cardapio.js').handler;
 var spoiler = require('./commands/spoiler.js').handler;
 
 function postJambaToSlack(cardapio) {
+  if (!cardapio) {
+    return;
+  }
+
   var url;
   if (variables.JAMBABOT_DEBUG) {
     url = variables.JAMBABOT_DEBUG_URL;
