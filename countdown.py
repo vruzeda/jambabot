@@ -27,7 +27,7 @@ remainingMinutes = (delta.seconds / 60) % 60
 
 text = "*%d*" % remainingMinutes
 if ZUA and remainingMinutes == 0:
-	text += "\nhttps://i.imgur.com/jpMZZnC.gif"
+	text += "\nhttps://i.imgur.com/bxQ5fle.png"
 
 post_to_slack(text)
 
