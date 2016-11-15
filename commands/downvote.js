@@ -1,15 +1,27 @@
 (function() {
 
+  var jambalaya = require('../integrations/jambalaya');
   var mongodb = require('../integrations/mongodb');
 
   function downvote(message, callback, dish) {
-    mongodb.downvoteDish(message.userName, dish, function(error) {
+    jambalaya.getJambaForDate(new Date(), function(error, jamba) {
       if (error) {
         callback('Não entendi nada....');
         return;
       }
 
-      callback('Vixxxxxxi c lascou kkkkk');
+      if (jamba.mainDishes.indexOf(dish) >= 0) {
+        mongodb.downvoteDish(message.userName, dish, function(error) {
+          if (error) {
+            callback('Não entendi nada....');
+            return;
+          }
+
+          callback('Vixxxxxxi c lascou kkkkk');
+        });
+      } else {
+        callback('C fude. Kkkkkkkk');
+      }
     });
   }
 

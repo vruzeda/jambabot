@@ -1,15 +1,27 @@
 (function() {
 
+  var jambalaya = require('../integrations/jambalaya');
   var mongodb = require('../integrations/mongodb');
 
   function addImageForDish(message, callback, dishName, dishImageUrl) {
-    mongodb.addImageForDish(dishName, dishImageUrl.replace(/^<(.*)>$/, '$1'), function(error) {
+    jambalaya.getJambaForDate(new Date(), function(error, jamba) {
       if (error) {
-        callback('Vixxxxxxi c lascou kkkkk');
+        callback('Não entendi nada....');
         return;
       }
 
-      callback('Acho q ficou bom');
+      if (jamba.mainDishes.indexOf(dishName) >= 0) {
+        mongodb.addImageForDish(dishName, dishImageUrl.replace(/^<(.*)>$/, '$1'), function(error) {
+          if (error) {
+            callback('Vixxxxxxi c lascou kkkkk');
+            return;
+          }
+
+          callback('Acho q ficou bom');
+        });
+      } else {
+        callback('C fude. Kkkkkkkk');
+      }
     });
   }
 
