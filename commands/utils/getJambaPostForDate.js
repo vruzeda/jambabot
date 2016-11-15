@@ -57,52 +57,53 @@
       }
 
       getImageForMainDishes(jamba.mainDishes, function(images) {
-        if (jamba.mainDishes.length > 0) {
-          body += 'Pratos principais: ';
-          for (var i = 0; i < jamba.mainDishes.length; ++i) {
-            var mainDish = jamba.mainDishes[i];
-            var image = images[i];
+        getRatingsForMainDishes(jamba.mainDishes, function(ratings) {
+          if (jamba.mainDishes.length > 0) {
+            body += 'Pratos principais: ';
+            for (var i = 0; i < jamba.mainDishes.length; ++i) {
+              var mainDish = jamba.mainDishes[i];
+              var image = images[i];
+              var rating = ratings[i];
 
-            if (i > 0) {
-              body += ' - ';
+              body += `\n- :arrow_up_small: ${rating.upvotes} :arrow_down_small: ${rating.downvotes} `;
+
+              if (image) {
+                body += `<${image}|${mainDish}>`;
+              } else {
+                body += mainDish;
+              }
+            }
+          }
+
+          if (jamba.garnishes.length > 0) {
+            if (body.length > 0) {
+              body += '\n';
             }
 
-            if (image) {
-              body += `<${image}|${mainDish}>`;
-            } else {
-              body += mainDish;
+            body += `Guarnições: ${jamba.garnishes.join(' - ')}`;
+          }
+
+          if (jamba.salads.length > 0) {
+            if (body.length > 0) {
+              body += '\n';
             }
-          }
-        }
 
-        if (jamba.garnishes.length > 0) {
-          if (body.length > 0) {
-            body += '\n';
+            body += `Saladas: ${jamba.salads.join(' - ')}`;
           }
 
-          body += `Guarnições: ${jamba.garnishes.join(' - ')}`;
-        }
-
-        if (jamba.salads.length > 0) {
-          if (body.length > 0) {
-            body += '\n';
+          if (require('../../variables').JAMBABOT_ZUA) {
+            body = body.replace(/sexta-feira/g, ':pizza:-feira');
+            body = body.replace(/Frango supremo/g, ':sparkles:FRANGO SUPREMO:sparkles: :heart:');
+            body = body.replace(/Penne/g, 'Pênis');
+            body = body.replace(/Picadinho/g, 'Pecadinho');
+            body = body.replace(/à milanesa/g, 'ali na mesa');
+            body = body.replace(/à dorê/g, 'adorei');
+            body = body.replace(/Feijoada/g, 'Feijuca :heartmucholoko:');
+            body = body.replace(/Nhoque/g, 'Guinóxi');
           }
 
-          body += `Saladas: ${jamba.salads.join(' - ')}`;
-        }
-
-        if (require('../../variables').JAMBABOT_ZUA) {
-          body = body.replace(/sexta-feira/g, ':pizza:-feira');
-          body = body.replace(/Frango supremo/g, ':sparkles:FRANGO SUPREMO:sparkles: :heart:');
-          body = body.replace(/Penne/g, 'Pênis');
-          body = body.replace(/Picadinho/g, 'Pecadinho');
-          body = body.replace(/à milanesa/g, 'ali na mesa');
-          body = body.replace(/à dorê/g, 'adorei');
-          body = body.replace(/Feijoada/g, 'Feijuca :heartmucholoko:');
-          body = body.replace(/Nhoque/g, 'Guinóxi');
-        }
-
-        callback(header + body + footer);
+          callback(header + body + footer);
+        });
       });
     });
   }
@@ -112,14 +113,10 @@
   }
 
   function recursivelyGetImageForMainDishes(mainDishes, index, images, callback) {
-    console.log(`Getting image for ${mainDishes[index]} (${index + 1} of ${mainDishes.length})`);
-
     if (index < mainDishes.length) {
-      getImage(mainDishes[index], function(error, image) {
-        if (error) {
-          console.log(error);
-        }
+      console.log(`Getting image for ${mainDishes[index]} (${index + 1} of ${mainDishes.length})`);
 
+      getImage(mainDishes[index], function(error, image) {
         images.push(image);
         recursivelyGetImageForMainDishes(mainDishes, index + 1, images, callback);
       });
@@ -137,6 +134,23 @@
 
       googleImages.getRandomImage(query, callback);
     });
+  }
+
+  function getRatingsForMainDishes(mainDishes, callback) {
+    recursivelyGetRatingsForMainDishes(mainDishes, 0, [], callback);
+  }
+
+  function recursivelyGetRatingsForMainDishes(mainDishes, index, ratings, callback) {
+    if (index < mainDishes.length) {
+      console.log(`Getting ratings for ${mainDishes[index]} (${index + 1} of ${mainDishes.length})`);
+
+      mongodb.getDishRating(mainDishes[index], function(error, rating) {
+        ratings.push(rating || { upvotes: 0, downvotes: 0 });
+        recursivelyGetRatingsForMainDishes(mainDishes, index + 1, ratings, callback);
+      });
+    } else {
+      callback(ratings);
+    }
   }
 
   module.exports = getJambaPostForDate;
