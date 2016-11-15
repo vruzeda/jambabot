@@ -30,7 +30,7 @@ function postJambaToSlack(cardapio) {
 
 var today = new Date();
 if (today.getHours() < 11) {
-  cardapio(postJambaToSlack);
+  cardapio(undefined, postJambaToSlack);
 } else {
-  spoiler(postJambaToSlack);
+  spoiler(undefined, postJambaToSlack);
 }
