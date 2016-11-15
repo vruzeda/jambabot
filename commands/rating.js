@@ -1,16 +1,15 @@
 (function() {
 
-  var jambalaya = require('../integrations/jambalaya');
   var mongodb = require('../integrations/mongodb');
 
   function rating(message, callback, dish) {
-    jambalaya.getJambaForDate(new Date(), function(error, jamba) {
+    mongodb.isValidDish(dish, function(error, isValidDish) {
       if (error) {
         callback('Não entendi nada....');
         return;
       }
 
-      if (jamba.mainDishes.indexOf(dish) >= 0) {
+      if (isValidDish) {
         mongodb.getDishRating(dish, function(error, dishRating) {
           if (error) {
             callback('Não sei de nada....\nMais é show....');

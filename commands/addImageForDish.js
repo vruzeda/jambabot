@@ -1,16 +1,15 @@
 (function() {
 
-  var jambalaya = require('../integrations/jambalaya');
   var mongodb = require('../integrations/mongodb');
 
   function addImageForDish(message, callback, dishName, dishImageUrl) {
-    jambalaya.getJambaForDate(new Date(), function(error, jamba) {
+    mongodb.isValidDish(dishName, function(error, isValidDish) {
       if (error) {
         callback('Não entendi nada....');
         return;
       }
 
-      if (jamba.mainDishes.indexOf(dishName) >= 0) {
+      if (isValidDish) {
         mongodb.addImageForDish(dishName, dishImageUrl.replace(/^<(.*)>$/, '$1'), function(error) {
           if (error) {
             callback('Vixxxxxxi c lascou kkkkk');

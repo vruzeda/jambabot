@@ -62,13 +62,20 @@
         }
       }
 
-      mongodb.saveJambas(jambas, function(errors) {
+      mongodb.saveDishes(jambas.reduce((dishes, jamba) => dishes.concat(jamba.mainDishes), []), function(errors) {
         if (errors.filter((error) => error).length > 0) {
-          callback(new Error('Couldn\'t save all jambas from site.'));
+          callback(new Error('Couldn\'t save all dishes from site.'));
           return;
         }
 
-        callback(null);
+        mongodb.saveJambas(jambas, function(errors) {
+          if (errors.filter((error) => error).length > 0) {
+            callback(new Error('Couldn\'t save all jambas from site.'));
+            return;
+          }
+
+          callback(null);
+        });
       });
     });
   }
