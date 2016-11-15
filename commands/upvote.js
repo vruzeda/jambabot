@@ -3,7 +3,7 @@
   var mongodb = require('../integrations/mongodb');
 
   function upvote(message, callback, dish) {
-    mongodb.upvoteDish(dish, function(error) {
+    mongodb.upvoteDish(message.userName, dish, function(error) {
       if (error) {
         callback('Não entendi nada....');
         return;

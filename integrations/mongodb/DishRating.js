@@ -3,21 +3,24 @@
   var mongoose = require('mongoose');
 
   var DishRatingSchema = mongoose.Schema({
-    dish: { type: String, unique: true },
+    userName: { type: String, required: true },
+    dish: { type: String, required: true },
     upvotes: { type: Number, default: 0 },
     downvotes: { type: Number, default: 0 }
   });
+  DishRatingSchema.index({ userName: 1, dish: 1 }, { unique: true });
+
   var DishRating = mongoose.model('DishRating', DishRatingSchema);
 
-  function findDishRating(dish, callback) {
-    DishRating.findOne({dish: dish.toLowerCase()}, function(error, dishRating) {
+  function findUserDishRating(userName, dish, callback) {
+    DishRating.findOne({userName: userName.toLowerCase(), dish: dish.toLowerCase()}, function(error, dishRating) {
       if (error) {
         callback(error, undefined);
         return;
       }
 
       if (!dishRating) {
-        callback(new Error(`Couldn't find a rating for ${dish}`), undefined);
+        callback(new Error(`Couldn't find ${userName}'s rating for ${dish}`), undefined);
         return;
       }
 
@@ -25,13 +28,14 @@
     });
   };
 
-  function upvoteDish(dish, callback) {
-    findDishRating(dish, function(error, dishRating) {
-      if (dishRating) {
-        dishRating.upvotes++;
-      } else {
-        dishRating = new DishRating({dish: dish.toLowerCase(), upvotes: 1});
+  function upvoteDish(userName, dish, callback) {
+    findUserDishRating(userName, dish, function(error, dishRating) {
+      if (!dishRating) {
+        dishRating = new DishRating({dish: dish.toLowerCase(), userName: userName.toLowerCase()});
       }
+
+      dishRating.upvotes = 1;
+      dishRating.downvotes = 0;
 
       dishRating.save(function(error) {
         callback(error);
@@ -39,13 +43,14 @@
     });
   };
 
-  function downvoteDish(dish, callback) {
-    findDishRating(dish, function(error, dishRating) {
-      if (dishRating) {
-        dishRating.downvotes++;
-      } else {
-        dishRating = new DishRating({dish: dish.toLowerCase(), downvotes: 1});
+  function downvoteDish(userName, dish, callback) {
+    findUserDishRating(userName, dish, function(error, dishRating) {
+      if (!dishRating) {
+        dishRating = new DishRating({dish: dish.toLowerCase(), userName: userName.toLowerCase()});
       }
+
+      dishRating.upvotes = 0;
+      dishRating.downvotes = 1;
 
       dishRating.save(function(error) {
         callback(error);
@@ -54,15 +59,32 @@
   };
 
   function getDishRating(dish, callback) {
-    findDishRating(dish, function(error, dishRating) {
+    var query = {
+      $match: {
+        dish: dish.toLowerCase()
+      }
+    };
+
+    var grouping = {
+      _id: "$dish",
+      upvotes: { $sum: "$upvotes" },
+      downvotes: { $sum: "$downvotes" }
+    };
+
+    DishRating.aggregate([query, { $group: grouping }]).exec(function(error, aggregatedDishRatings) {
       if (error) {
         callback(error, undefined);
         return;
       }
 
+      if (aggregatedDishRatings.length == 0) {
+        callback(new Error(`Couldn't find ratings for ${dish}`), undefined);
+        return;
+      }
+
       callback(null, {
-        upvotes: dishRating.upvotes,
-        downvotes: dishRating.downvotes
+        upvotes: aggregatedDishRatings[0].upvotes,
+        downvotes: aggregatedDishRatings[0].downvotes
       });
     });
   };
