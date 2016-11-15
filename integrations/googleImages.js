@@ -1,6 +1,6 @@
 (function() {
 
-  var variables = require('../variables.js');
+  var variables = require('../variables');
   var googleImages = require('google-images');
 
   function getRandomImage(query, callback) {

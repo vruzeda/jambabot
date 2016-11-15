@@ -1,8 +1,8 @@
 (function() {
 
-  var jamba = require('../../integrations/jamba.js');
-  var mongodb = require('../../integrations/mongodb.js');
-  var googleImages = require('../../integrations/googleImages.js');
+  var jamba = require('../../integrations/jamba');
+  var mongodb = require('../../integrations/mongodb');
+  var googleImages = require('../../integrations/googleImages');
 
   function getJambaPostForDate(callback, date) {
     // Check if the date is in the current month (and year, just for safety)
@@ -91,7 +91,7 @@
           body += `Saladas: ${jamba.salads.join(' - ')}`;
         }
 
-        if (require('../../variables.js').JAMBABOT_ZUA) {
+        if (require('../../variables').JAMBABOT_ZUA) {
           body = body.replace(/sexta-feira/g, ':pizza:-feira');
           body = body.replace(/Frango supremo/g, ':sparkles:FRANGO SUPREMO:sparkles: :heart:');
           body = body.replace(/Penne/g, 'Pênis');

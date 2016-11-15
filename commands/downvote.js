@@ -1,6 +1,6 @@
 (function() {
 
-  var mongodb = require('../integrations/mongodb.js');
+  var mongodb = require('../integrations/mongodb');
 
   function downvote(message, callback, dish) {
     mongodb.downvoteDish(dish, function(error) {

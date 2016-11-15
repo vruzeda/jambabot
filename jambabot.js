@@ -3,8 +3,8 @@
   var bodyParser = require('body-parser');
   var express = require('express');
 
-  var variables = require('./variables.js');
-  var parseCommand = require('./commands/parseCommand.js');
+  var variables = require('./variables');
+  var parseCommand = require('./commands/parseCommand');
 
   var app = express();
 

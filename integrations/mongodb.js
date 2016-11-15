@@ -9,7 +9,8 @@
   }));
 
   var DishRating = mongoose.model('DishRating', mongoose.Schema({
-    dish: { type: String, unique: true },
+    userName: String,
+    dish: String,
     upvotes: { type: Number, default: 0 },
     downvotes: { type: Number, default: 0 }
   }));

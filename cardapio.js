@@ -2,9 +2,9 @@
 
 var request = require('request');
 
-var variables = require('./variables.js');
-var cardapio = require('./commands/cardapio.js').handler;
-var spoiler = require('./commands/spoiler.js').handler;
+var variables = require('./variables');
+var cardapio = require('./commands/cardapio').handler;
+var spoiler = require('./commands/spoiler').handler;
 
 function postJambaToSlack(cardapio) {
   if (!cardapio) {

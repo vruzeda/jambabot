@@ -1,11 +1,11 @@
 (function() {
 
-  var help = require('./help.js');
+  var help = require('./help');
 
   function parseCommand(message, callback) {
     var parsed = false;
 
-    var commands = require('./commands.js');
+    var commands = require('./commands');
 
     for (var i = 0; !parsed && i < commands.length; ++i) {
       var command = commands[i];

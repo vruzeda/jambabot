@@ -1,6 +1,6 @@
 (function() {
 
-  var mongodb = require('../integrations/mongodb.js');
+  var mongodb = require('../integrations/mongodb');
 
   function addImageForDish(message, callback, dishName, dishImageUrl) {
     mongodb.addImageForDish(dishName, dishImageUrl.replace(/^<(.*)>$/, '$1'), function(error) {

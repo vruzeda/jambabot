@@ -1,6 +1,6 @@
 (function() {
 
-  var mongodb = require('../integrations/mongodb.js');
+  var mongodb = require('../integrations/mongodb');
 
   function rating(message, callback, dish) {
     mongodb.getDishRating(dish, function(error, dishRating) {

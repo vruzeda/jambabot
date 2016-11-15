@@ -1,6 +1,6 @@
 (function() {
 
-  var getJambaPostForDate = require('./utils/getJambaPostForDate.js');
+  var getJambaPostForDate = require('./utils/getJambaPostForDate');
 
   function spoiler(message, callback) {
     var date = new Date();

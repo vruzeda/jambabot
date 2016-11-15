@@ -9,7 +9,7 @@
       help = 'Então o que me diz disso aiiii :\n>>>';
     }
 
-    var commands = require('./commands.js');
+    var commands = require('./commands');
     for (var i = 0; i < commands.length; ++i) {
       help += commands[i].description + '\n';
     }
