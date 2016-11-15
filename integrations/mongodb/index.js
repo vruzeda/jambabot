@@ -6,6 +6,7 @@
 
   var DishImage = require('./DishImage');
   var DishRating = require('./DishRating');
+  var Jamba = require('./Jamba');
 
   module.exports = {
     getImageForDish: DishImage.getImageForDish,
@@ -13,7 +14,10 @@
 
     upvoteDish: DishRating.upvoteDish,
     downvoteDish: DishRating.downvoteDish,
-    getDishRating: DishRating.getDishRating
+    getDishRating: DishRating.getDishRating,
+
+    findJambaForDate: Jamba.findJambaForDate,
+    saveJambas: Jamba.saveJambas
   };
 
 })();
