@@ -1,6 +1,6 @@
 (function() {
 
-  function help(callback, invalidCommand) {
+  function help(message, callback, invalidCommand) {
     var help;
 
     if (invalidCommand) {

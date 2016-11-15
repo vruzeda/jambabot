@@ -2,7 +2,7 @@
 
   var mongodb = require('../integrations/mongodb.js');
 
-  function addImageForDish(callback, dishName, dishImageUrl) {
+  function addImageForDish(message, callback, dishName, dishImageUrl) {
     mongodb.addImageForDish(dishName, dishImageUrl.replace(/^<(.*)>$/, '$1'), function(error) {
       if (error) {
         callback('Vixxxxxxi c lascou kkkkk');

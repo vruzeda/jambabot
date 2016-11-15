@@ -14,15 +14,19 @@
 
   app.post('/trigger', function(slackRequest, slackResponse) {
     if (slackRequest.body.token === variables.JAMBABOT_DEBUG_TOKEN || slackRequest.body.token === variables.JAMBABOT_PROD_TOKEN) {
-      var userCommand = slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim();
-      parseCommand(function(response) {
+      var message = {
+        userName: slackRequest.body.user_name,
+        userText: slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim()
+      };
+
+      parseCommand(message, function(response) {
         if (!response) {
           slackResponse.status(404).send();
           return;
         }
 
         slackResponse.send(`{"text": ${JSON.stringify(response)}}`);
-      }, userCommand);
+      });
     } else {
       slackResponse.status(403).send();
     }

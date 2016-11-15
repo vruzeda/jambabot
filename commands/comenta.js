@@ -1,6 +1,6 @@
 (function() {
 
-  function comenta(callback) {
+  function comenta(message, callback) {
     // Do nothing!
     callback(null);
   }

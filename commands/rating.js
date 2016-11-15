@@ -2,7 +2,7 @@
 
   var mongodb = require('../integrations/mongodb.js');
 
-  function rating(callback, dish) {
+  function rating(message, callback, dish) {
     mongodb.getDishRating(dish, function(error, dishRating) {
       if (error) {
         callback('Não sei de nada....\nMais é show....');

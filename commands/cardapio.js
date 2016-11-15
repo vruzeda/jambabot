@@ -2,7 +2,7 @@
 
   var getJambaPostForDate = require('./utils/getJambaPostForDate.js');
 
-  function cardapio(callback, dateString) {
+  function cardapio(message, callback, dateString) {
     var date = new Date();
 
     if (dateString) {

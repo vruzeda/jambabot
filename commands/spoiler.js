@@ -2,7 +2,7 @@
 
   var getJambaPostForDate = require('./utils/getJambaPostForDate.js');
 
-  function spoiler(callback) {
+  function spoiler(message, callback) {
     var date = new Date();
     date.setDate(date.getDate() + 1);
 
