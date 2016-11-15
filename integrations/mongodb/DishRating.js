@@ -1,60 +1,13 @@
 (function() {
 
   var mongoose = require('mongoose');
-  mongoose.connect('mongodb://localhost/jambadb');
 
-  var DishImage = mongoose.model('DishImage', mongoose.Schema({
+  var DishRatingSchema = mongoose.Schema({
     dish: { type: String, unique: true },
-    image: String
-  }));
-
-  var DishRating = mongoose.model('DishRating', mongoose.Schema({
-    userName: String,
-    dish: String,
     upvotes: { type: Number, default: 0 },
     downvotes: { type: Number, default: 0 }
-  }));
-
-  function findDishImage(dish, callback) {
-    DishImage.findOne({dish: dish.toLowerCase()}, function(error, dishImage) {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
-
-      if (!dishImage) {
-        callback(new Error(`Couldn't find an image for ${dish}`), undefined);
-        return;
-      }
-
-      callback(null, dishImage);
-    });
-  }
-
-  function getImageForDish(dish, callback) {
-    findDishImage(dish, function(error, dishImage) {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
-
-      callback(null, dishImage.image);
-    });
-  }
-
-  function addImageForDish(dish, image, callback) {
-    findDishImage(dish, function(error, dishImage) {
-      if (dishImage) {
-        dishImage.image = image;
-      } else {
-        dishImage = new DishImage({dish: dish.toLowerCase(), image: image});
-      }
-
-      dishImage.save(function(error) {
-        callback(error);
-      });
-    });
-  }
+  });
+  var DishRating = mongoose.model('DishRating', DishRatingSchema);
 
   function findDishRating(dish, callback) {
     DishRating.findOne({dish: dish.toLowerCase()}, function(error, dishRating) {
@@ -70,7 +23,7 @@
 
       callback(null, dishRating);
     });
-  }
+  };
 
   function upvoteDish(dish, callback) {
     findDishRating(dish, function(error, dishRating) {
@@ -84,7 +37,7 @@
         callback(error);
       });
     });
-  }
+  };
 
   function downvoteDish(dish, callback) {
     findDishRating(dish, function(error, dishRating) {
@@ -98,7 +51,7 @@
         callback(error);
       });
     });
-  }
+  };
 
   function getDishRating(dish, callback) {
     findDishRating(dish, function(error, dishRating) {
@@ -112,11 +65,9 @@
         downvotes: dishRating.downvotes
       });
     });
-  }
+  };
 
   module.exports = {
-    getImageForDish: getImageForDish,
-    addImageForDish: addImageForDish,
     upvoteDish: upvoteDish,
     downvoteDish: downvoteDish,
     getDishRating: getDishRating
