@@ -35,7 +35,7 @@
     });
   };
 
-  function addImageForDish(dish, callback) {
+  function addImageForDish(dish, image, callback) {
     findDishImage(dish, function(error, dishImage) {
       if (dishImage) {
         dishImage.image = image;
