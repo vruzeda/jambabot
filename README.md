@@ -14,7 +14,6 @@ This script was written for run in NodeJS using JavaScript.
 To run it, you must define a file named "variables.js" with three variables defined:
 
 - JAMBABOT_DEBUG: Enables debug logs, and makes the script post to the debug channel (it should be either 'True' or 'False');
-- JAMBABOT_ZUA: Enables zua, a word mapping algorithm to make the menus more fun (it should be either 'True' or 'False');
 - JAMBABOT_DEBUG_URL: The URL provided by Slack - this one is used for debug purposes (only used if JAMBABOT_DEBUG is true);
 - JAMBABOT_PROD_URL: The URL provided by Slack - this is one is used for production.
 
@@ -32,7 +31,6 @@ This script was written using python3.
 To run it, you should have 3 environment variables defined:
 
 - JAMBABOT_DEBUG: Enables debug logs, and makes the script post to the debug channel (it should be either 'True' or 'False');
-- JAMBABOT_ZUA: Enables zua, a word mapping algorithm to make the menus more fun (it should be either 'True' or 'False');
 - JAMBABOT_DEBUG_URL: The URL provided by Slack - this one is used for debug purposes (only used if JAMBABOT_DEBUG is true);
 - JAMBABOT_PROD_URL: The URL provided by Slack - this is one is used for production.
 
@@ -53,7 +51,6 @@ In development, any other command will result in a "Hello, world"-like reply, fo
 This script was written for run in NodeJS using JavaScript.
 To run it, you must define a file named "variables.js" with three variables defined:
 
-- JAMBABOT_ZUA: Enables zua, a word mapping algorithm to make the menus more fun (boolean);
 - JAMBABOT_DEBUG_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for debug purposes, printing additional logs;
 - JAMBABOT_PROD_TOKEN: The token provided by Slack to validate that the post was originated from Slack - this one is used for production;
 - GOOGLE_API_KEY: You custom Google's API key (used for image obtention, requires "Google Custom Search Engine API" to be enabled);

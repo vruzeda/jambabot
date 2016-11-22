@@ -2,8 +2,6 @@
 // This is a stub for it.
 
 module.exports = {
-  JAMBABOT_ZUA: true,
-
   JAMBABOT_DEBUG: false,
   JAMBABOT_DEBUG_URL: 'URL for development',
   JAMBABOT_PROD_URL: 'URL for production',

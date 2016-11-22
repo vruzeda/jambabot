@@ -5,7 +5,6 @@ import os
 import urllib2
 
 DEBUG = os.getenv("JAMBABOT_DEBUG", "False") == "True"
-ZUA = os.getenv("JAMBABOT_ZUA", "False") == "True"
 
 def post_to_slack(text):
         if DEBUG:
@@ -26,7 +25,7 @@ delta = datetime.timedelta(0, 0, 0, 0, 15, 11) - datetime.timedelta(0, 0, 0, 0, 
 remainingMinutes = (delta.seconds / 60) % 60
 
 text = "*%d*" % remainingMinutes
-if ZUA and remainingMinutes == 0:
+if remainingMinutes == 0:
 	text += "\nhttps://i.imgur.com/bxQ5fle.png"
 
 post_to_slack(text)

@@ -90,17 +90,6 @@
             body += `Saladas: ${jamba.salads.join(' - ')}`;
           }
 
-          if (require('../../variables').JAMBABOT_ZUA) {
-            body = body.replace(/sexta-feira/g, ':pizza:-feira');
-            body = body.replace(/Frango supremo/g, ':sparkles:FRANGO SUPREMO:sparkles: :heart:');
-            body = body.replace(/Penne/g, 'Pênis');
-            body = body.replace(/Picadinho/g, 'Pecadinho');
-            body = body.replace(/à milanesa/g, 'ali na mesa');
-            body = body.replace(/à dorê/g, 'adorei');
-            body = body.replace(/Feijoada/g, 'Feijuca :heartmucholoko:');
-            body = body.replace(/Nhoque/g, 'Guinóxi');
-          }
-
           callback(header + body + footer);
         });
       });
