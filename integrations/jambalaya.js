@@ -17,7 +17,7 @@
       } else {
         var today = new Date();
         if (date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear()) {
-          parseJambasFromSite(function(error) {
+          updateJambasFromSite(function(error) {
             if (error) {
               callback(error, undefined);
               return;
@@ -43,7 +43,7 @@
     });
   }
 
-  function parseJambasFromSite(callback) {
+  function updateJambasFromSite(callback) {
     request({ url: 'http://www.refeicoesjambalaya.com.br/cardapio.asp', encoding: null }, function(error, response, data) {
       var jambaSite = iconvlite.decode(response.body, 'iso-8859-1');
       var paragraphs = jambaSite.split('<p>');
@@ -119,7 +119,8 @@
   }
 
   module.exports = {
-    getJambaForDate: getJambaForDate
+    getJambaForDate: getJambaForDate,
+    updateJambasFromSite: updateJambasFromSite
   };
 
 })();
