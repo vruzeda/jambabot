@@ -18,7 +18,15 @@
       var resultsLength = images.length;
       if (resultsLength > 0) {
         var randomResult = images[Math.floor((Math.random() * resultsLength))];
-        callback(null, randomResult.url);
+        var imageUrl = randomResult.url;
+
+        if (randomResult.width > randomResult.height && randomResult.width > 640) {
+          imageUrl = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?url=${encodeURIComponent(imageUrl)}&container=focus&resize_w=640&refresh=2592000`;
+        } else if (randomResult.height > randomResult.width && randomResult.height > 640) {
+          imageUrl = `https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?url=${encodeURIComponent(imageUrl)}&container=focus&resize_h=640&refresh=2592000`;
+        }
+
+        callback(null, imageUrl);
       } else {
         callback(null, undefined);
       }
