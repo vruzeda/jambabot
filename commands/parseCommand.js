@@ -1,6 +1,7 @@
 (function() {
 
   var help = require('./help');
+  var isValidCommand = require('./utils/isValidCommand');
 
   function parseCommand(message, callback) {
     var parsed = false;
@@ -12,7 +13,11 @@
 
       var match = message.userText.match(command.pattern);
       if (match) {
-        command.handler.apply(this, [message, callback].concat(match.slice(1)));
+        if (isValidCommand(command, message)) {
+          command.handler.apply(this, [message, callback].concat(match.slice(1)));
+        } else {
+          callback('C fude kkkkk');
+        }
         parsed = true;
       }
     }

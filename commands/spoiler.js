@@ -20,7 +20,8 @@
   module.exports = {
     pattern: /^spoiler$/,
     handler: spoiler,
-    description: '*silviao spoiler* : Replies with tomorrow\'s menu'
+    description: '*silviao spoiler* : Replies with tomorrow\'s menu',
+    channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
 
 })();

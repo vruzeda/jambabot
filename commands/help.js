@@ -1,5 +1,7 @@
 (function() {
 
+  var isValidCommand = require('./utils/isValidCommand');
+
   function help(message, callback, invalidCommand) {
     var help;
 
@@ -10,8 +12,10 @@
     }
 
     var commands = require('./commands');
-    for (var i = 0; i < commands.length; ++i) {
-      help += commands[i].description + '\n';
+    for (var command of commands) {
+      if (isValidCommand(command, message)) {
+        help += command.description + '\n';
+      }
     }
 
     callback(help);
@@ -20,7 +24,8 @@
   module.exports = {
     pattern: /^ajuda$/,
     handler: help,
-    description: '*silviao ajuda* : shows a list of valid commands'
+    description: '*silviao ajuda* : shows a list of valid commands',
+    channels: undefined
   };
 
 })();

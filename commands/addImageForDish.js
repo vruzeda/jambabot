@@ -27,7 +27,8 @@
   module.exports = {
     pattern: /^add image (.*) (.*)$/,
     handler: addImageForDish,
-    description: '*silviao add image [dish name] [dish image URL]* : Persists an image for the specified dish'
+    description: '*silviao add image [dish name] [dish image URL]* : Persists an image for the specified dish',
+    channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
 
 })();

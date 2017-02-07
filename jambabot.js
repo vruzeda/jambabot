@@ -50,15 +50,31 @@
 
   controller.hears('.*', ['direct_message', 'direct_mention', 'mention'], function(bot, botMessage) {
     bot.api.users.info({user: botMessage.user}, function(error, usersInfoResponse) {
-      var message = {
-        userName: usersInfoResponse.user.name,
-        userText: botMessage.text.replace(/\s+/g, ' ').trim()
-      };
+      var userName = usersInfoResponse.user.name;
 
-      parseCommand(message, function(response) {
-        if (response) {
-          bot.reply(botMessage, response);
+      bot.api.channels.info({channel: botMessage.channel}, function(error, channelsInfoResponse) {
+        var channel;
+        if (channelsInfoResponse.ok) {
+          channel = channelsInfoResponse.channel.name;
+        } else if (botMessage.event == 'direct_message') {
+          channel = 'allow';
+        } else {
+          channel = 'unknown';
         }
+
+        var message = {
+          channel: channel,
+          userName: userName,
+          userText: botMessage.text.replace(/\s+/g, ' ').trim()
+        };
+
+        console.log(message);
+
+        parseCommand(message, function(response) {
+          if (response) {
+            bot.reply(botMessage, response);
+          }
+        });
       });
     });
   });

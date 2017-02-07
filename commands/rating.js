@@ -27,7 +27,8 @@
   module.exports = {
     pattern: /^rating (.+)$/,
     handler: rating,
-    description: '*silviao rating [dish name]* : Gets the upvotes/downvotes ratings for the specified dish'
+    description: '*silviao rating [dish name]* : Gets the upvotes/downvotes ratings for the specified dish',
+    channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
 
 })();

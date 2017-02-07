@@ -27,7 +27,8 @@
   module.exports = {
     pattern: /^upvote (.+)$/,
     handler: upvote,
-    description: '*silviao upvote [dish name]* : Adds an upvote for the specified dish'
+    description: '*silviao upvote [dish name]* : Adds an upvote for the specified dish',
+    channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
 
 })();
