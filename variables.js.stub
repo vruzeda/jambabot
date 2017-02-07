@@ -6,6 +6,8 @@ module.exports = {
   JAMBABOT_DEBUG_URL: 'URL for development',
   JAMBABOT_PROD_URL: 'URL for production',
 
+  JAMBABOT_USER_TOKEN: 'URL for userbot',
+
   JAMBABOT_DEBUG_TOKEN: 'Token for development',
   JAMBABOT_PROD_TOKEN: 'Token for production',
 
