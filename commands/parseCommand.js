@@ -1,6 +1,5 @@
 (function() {
 
-  var help = require('./help');
   var isValidCommand = require('./utils/isValidCommand');
 
   function parseCommand(message, callback) {
@@ -20,10 +19,6 @@
         }
         parsed = true;
       }
-    }
-
-    if (!parsed) {
-      help.handler(message, callback, message.userText);
     }
   }
 
