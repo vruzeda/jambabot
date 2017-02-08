@@ -115,7 +115,7 @@
   }
 
   module.exports = {
-    pattern: /^(?:comenta)|(?:comentar)|(?:vai dizer)|(?:diria).*$/,
+    pattern: /^.*(?:comenta)|(?:comentar)|(?:vai dizer)|(?:diria).*$/,
     handler: comenta,
     description: '*silviao comenta*: I have reached sentience, try it out',
     channels: undefined
