@@ -111,7 +111,6 @@
       'http://i.imgur.com/ZCf9ERa.png'
     ];
 
-    // Do nothing!
     callback(comments[Math.floor(Math.random() * comments.length)]);
   }
 
