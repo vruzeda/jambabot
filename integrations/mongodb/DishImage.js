@@ -1,6 +1,7 @@
 (function() {
 
   var mongoose = require('mongoose');
+  var request = require('request');
 
   var DishImageSchema = mongoose.Schema({
     dish: { type: String, unique: true },
@@ -36,10 +37,6 @@
   };
 
   function addImageForDish(dish, image, callback) {
-    if (image.match(/i\.imgur\.com/) && !image.match(/^.*l\.[^.]*$/)) {
-      image = image.replace(/^(.*)(\.[^.]*)$/, '$1l$2');
-    }
-
     findDishImage(dish, function(error, dishImage) {
       if (dishImage) {
         dishImage.image = image;
