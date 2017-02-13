@@ -21,13 +21,13 @@ After defining the necessary variables, the script is run using:
 
     $ ./cardapio.js
 
-*countdown.py*
+*countdown.js*
 
-This script is used to print a countdown before the correct lunch time (11:15AM).
+This script is used to print a countdown before the correct lunch time (11:30AM).
 It was designed to run only in the hour before that, calculating the minutes to the correct time and posting it to Slack.
 When the counter reaches 0, a GIF is also posted.
 
-This script was written using python3.
+This script was written for run in NodeJS using JavaScript.
 To run it, you should have 3 environment variables defined:
 
 - JAMBABOT_DEBUG: Enables debug logs, and makes the script post to the debug channel (it should be either 'True' or 'False');
@@ -36,7 +36,7 @@ To run it, you should have 3 environment variables defined:
 
 After defining the necessary variables, the script is run using:
 
-    $ ./countdown.py
+    $ ./countdown.js
 
 *jambabot.js*
 
