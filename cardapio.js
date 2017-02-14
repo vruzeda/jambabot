@@ -18,7 +18,7 @@ function postJambaToSlack(cardapio) {
     url = variables.JAMBABOT_PROD_URL;
   }
 
-  request.post({ url: url, form: `payload={"text" : "${cardapio}"}` }, function(error) {
+  request.post({ url: url, json: {"text" : cardapio} }, function(error) {
     if (error) {
       console.error(error);
       process.exit(1);

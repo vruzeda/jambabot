@@ -16,7 +16,7 @@ function postCountdownToSlack(countdown) {
     url = variables.JAMBABOT_PROD_URL;
   }
 
-  request.post({ url: url, form: `payload={"text" : "${countdown}"}` }, function(error) {
+  request.post({ url: url, json: {"text" : countdown} }, function(error) {
     if (error) {
       console.error(error);
       process.exit(1);
