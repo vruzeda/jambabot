@@ -8,6 +8,7 @@
   var DishImage = require('./DishImage');
   var DishRating = require('./DishRating');
   var Jamba = require('./Jamba');
+  var SilvioComment = require('./SilvioComment')
 
   module.exports = {
     isValidDish: Dish.isValidDish,
@@ -21,7 +22,10 @@
     getDishRating: DishRating.getDishRating,
 
     findJambaForDate: Jamba.findJambaForDate,
-    saveJambas: Jamba.saveJambas
+    saveJambas: Jamba.saveJambas,
+
+    getRandomSilvioComment: SilvioComment.getRandomSilvioComment,
+    addSilvioComment: SilvioComment.addSilvioComment
   };
 
 })();

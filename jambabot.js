@@ -69,27 +69,31 @@
       var userName = usersInfoResponse.user.name;
 
       bot.api.channels.info({channel: botMessage.channel}, function(error, channelsInfoResponse) {
-        var channel;
-        if (channelsInfoResponse.ok) {
-          channel = channelsInfoResponse.channel.name;
-        } else if (botMessage.event == 'direct_message') {
-          channel = 'allow';
-        } else {
-          channel = 'unknown';
-        }
-
-        var message = {
-          channel: channel,
-          userName: userName,
-          userText: botMessage.text.replace(/\s+/g, ' ').trim()
-        };
-
-        console.log(message);
-
-        parseCommand(message, function(response) {
-          if (response) {
-            bot.reply(botMessage, response);
+        bot.api.groups.info({channel: botMessage.channel}, function(error, groupsInfoResponse) {
+          var channel;
+          if (channelsInfoResponse.ok) {
+            channel = channelsInfoResponse.channel.name;
+          } else if (groupsInfoResponse.ok) {
+            channel = groupsInfoResponse.group.name;
+          } else if (botMessage.event == 'direct_message') {
+            channel = 'allow';
+          } else {
+            channel = 'unknown';
           }
+
+          var message = {
+            channel: channel,
+            userName: userName,
+            userText: botMessage.text.replace(/\s+/g, ' ').trim()
+          };
+
+          console.log(message);
+
+          parseCommand(message, function(response) {
+            if (response) {
+              bot.reply(botMessage, response);
+            }
+          });
         });
       });
     });

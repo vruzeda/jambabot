@@ -2,6 +2,7 @@
 
   module.exports = [
     require('./cardapio'),
+    require('./addComment'),
     require('./comenta'),
     require('./spoiler'),
     require('./addImageForDish'),
