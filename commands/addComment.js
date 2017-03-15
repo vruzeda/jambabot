@@ -15,10 +15,11 @@
   }
 
   module.exports = {
-    pattern: /^add comment (.*)?$/,
+    pattern: /^add comment ([^]*)$/,
     handler: addComment,
     description: '*silviao add comment*: Adds a new comment',
-    channels: ['admin']
+    channels: ['admin'],
+    acceptsPreFormattedText: true
   };
 
 })();

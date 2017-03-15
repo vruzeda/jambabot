@@ -84,7 +84,8 @@
           var message = {
             channel: channel,
             userName: userName,
-            userText: botMessage.text.replace(/\s+/g, ' ').trim()
+            userText: botMessage.text.replace(/\s+/g, ' ').trim(),
+            preFormattedText: botMessage.text
           };
 
           console.log(message);
