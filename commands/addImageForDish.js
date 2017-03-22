@@ -7,19 +7,18 @@
     console.log(`Checking if ${image} exists...`);
     request({ url: image }, function(error, response, data) {
       var exists = (response.statusCode == 200);
-      callback(exists);
+      console.log(`... ${exists ? 'it does.' : 'it doesn\'t.'}`);
+      callback(exists, image);
     });
   }
 
   function getThumbnailUrlFromImageUrl(image, callback) {
     if (image.match(/i\.imgur\.com/)) {
-      var thumbnail = image.replace(/^(.*)(\.[^.]*)$/, '$1l$2');
-      checkIfImageExists(thumbnail, function(exists) {
+      checkIfImageExists(image.replace(/^(.*)(\.[^.]*)$/, '$1l$2'), function(exists, thumbnail) {
         if (exists) {
           callback(thumbnail);
         } else {
-          var thumbnail = image.replace(/^(.*).(\.[^.]*)$/, '$1l$2');
-          checkIfImageExists(thumbnail, function(exists) {
+          checkIfImageExists(image.replace(/^(.*).(\.[^.]*)$/, '$1l$2'), function(exists, thumbnail) {
             if (exists) {
               callback(thumbnail);
             } else {
