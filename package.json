@@ -10,5 +10,15 @@
     "iconv-lite": "^0.4.15",
     "mongoose": "^4.9.3",
     "request": "^2.81.0"
+  },
+  "scripts": {
+    "start": "node jambabot.js",
+    "build": "npm run lint",
+    "lint": "node node_modules/eslint/bin/eslint.js cardapio.js countdown.js jambabot.js updateJambas.js commands/**/*.js integrations/**/*.js"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0"
   }
 }
