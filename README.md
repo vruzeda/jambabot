@@ -1,10 +1,10 @@
-#Jambabot [![Build Status](https://travis-ci.org/carlos-algms/jambabot.svg?branch=master)](https://travis-ci.org/carlos-algms/jambabot)
+# Jambabot [![Build Status](https://travis-ci.org/vruzeda/jambabot.svg?branch=master)](https://travis-ci.org/vruzeda/jambabot)
 
 
 This repository contains 3 different Slack's bot applications, all relating to Refeições Jambalaya's daily menu.
 Basically, it parses the menu provided in http://www.refeicoesjambalaya.com.br/cardapio.asp and post it to a Slack's channel.
 
-*cardapio.js*
+## cardapio.js
 
 This script gets the menu and send it to a Slack's channel.
 It has the following behavior:
@@ -24,7 +24,7 @@ After defining the necessary variables, the script is run using:
 
     $ ./cardapio.js
 
-*countdown.js*
+## countdown.js
 
 This script is used to print a countdown before the correct lunch time (11:30AM).
 It was designed to run only in the hour before that, calculating the minutes to the correct time and posting it to Slack.
@@ -41,7 +41,7 @@ After defining the necessary variables, the script is run using:
 
     $ ./countdown.js
 
-*jambabot.js*
+## jambabot.js
 
 This script implements a reactive bot, answering to simple requests from users.
 There are currently to commands:
