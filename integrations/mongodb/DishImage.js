@@ -1,16 +1,15 @@
-(function() {
+const mongoose = require('mongoose');
 
-  var mongoose = require('mongoose');
-  var request = require('request');
 
-  var DishImageSchema = mongoose.Schema({
+(() => {
+  const DishImageSchema = mongoose.Schema({
     dish: { type: String, unique: true },
     image: String
   });
-  var DishImage = mongoose.model('DishImage', DishImageSchema);
+  const DishImage = mongoose.model('DishImage', DishImageSchema);
 
   function findDishImage(dish, callback) {
-    DishImage.findOne({dish: dish.toLowerCase()}, function(error, dishImage) {
+    DishImage.findOne({ dish: dish.toLowerCase() }, (error, dishImage) => {
       if (error) {
         callback(error, undefined);
         return;
@@ -23,10 +22,10 @@
 
       callback(null, dishImage);
     });
-  };
+  }
 
   function getImageForDish(dish, callback) {
-    findDishImage(dish, function(error, dishImage) {
+    findDishImage(dish, (error, dishImage) => {
       if (error) {
         callback(error, undefined);
         return;
@@ -34,25 +33,26 @@
 
       callback(null, dishImage.image);
     });
-  };
+  }
 
   function addImageForDish(dish, image, callback) {
-    findDishImage(dish, function(error, dishImage) {
+    findDishImage(dish, (error, dishImage) => {
+      let validDishImage = dishImage;
+
       if (dishImage) {
         dishImage.image = image;
       } else {
-        dishImage = new DishImage({dish: dish.toLowerCase(), image: image});
+        validDishImage = new DishImage({ dish: dish.toLowerCase(), image });
       }
 
-      dishImage.save(function(error) {
-        callback(error);
+      validDishImage.save((errorSaveDishImage) => {
+        callback(errorSaveDishImage);
       });
     });
-  };
+  }
 
   module.exports = {
-    getImageForDish: getImageForDish,
-    addImageForDish: addImageForDish
+    getImageForDish,
+    addImageForDish
   };
-
 })();

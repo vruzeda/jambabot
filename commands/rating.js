@@ -1,17 +1,16 @@
-(function() {
+const mongodb = require('../integrations/mongodb');
 
-  var mongodb = require('../integrations/mongodb');
-
+(() => {
   function rating(message, callback, dish) {
-    mongodb.isValidDish(dish, function(error, isValidDish) {
+    mongodb.isValidDish(dish, (error, isValidDish) => {
       if (error) {
         callback('Não entendi nada....');
         return;
       }
 
       if (isValidDish) {
-        mongodb.getDishRating(dish, function(error, dishRating) {
-          if (error) {
+        mongodb.getDishRating(dish, (errorDishRating, dishRating) => {
+          if (errorDishRating) {
             callback('Não sei de nada....\nMais é show....');
             return;
           }
@@ -30,5 +29,4 @@
     description: '*silviao rating [dish name]* : Gets the upvotes/downvotes ratings for the specified dish',
     channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
-
 })();

@@ -1,28 +1,27 @@
-(function() {
+const bodyParser = require('body-parser');
+const express = require('express');
 
-  var bodyParser = require('body-parser');
-  var express = require('express');
+const Botkit = require('botkit');
 
-  var Botkit = require('botkit');
+const variables = require('./variables');
+const parseCommand = require('./commands/parseCommand');
 
-  var variables = require('./variables');
-  var parseCommand = require('./commands/parseCommand');
-  var commands = require('./commands/commands');
-
-  var app = express();
+(() => {
+  const app = express();
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.text());
 
-  app.post('/trigger', function(slackRequest, slackResponse) {
-    if (slackRequest.body.token === variables.JAMBABOT_DEBUG_TOKEN || slackRequest.body.token === variables.JAMBABOT_PROD_TOKEN) {
-      var message = {
+  app.post('/trigger', (slackRequest, slackResponse) => {
+    const token = slackRequest.body.token;
+    if (token === variables.JAMBABOT_DEBUG_TOKEN || token === variables.JAMBABOT_PROD_TOKEN) {
+      const message = {
         userName: slackRequest.body.user_name,
         userText: slackRequest.body.text.substr(slackRequest.body.trigger_word.length).replace(/\s+/g, ' ').trim()
       };
 
-      parseCommand(message, function(response) {
+      parseCommand(message, (response) => {
         if (!response) {
           slackResponse.status(404).send();
           return;
@@ -35,69 +34,70 @@
     }
   });
 
-  app.listen(6001, function () {
-    console.log('jambabot app listening on port 6001!');
-    console.log('variables: ' + JSON.stringify(variables));
+  app.listen(6001, () => {
+    console.info('jambabot app listening on port 6001!');
+    console.info(`variables: ${JSON.stringify(variables)}`);
   });
 
-  var controller = Botkit.slackbot({
+  const controller = Botkit.slackbot({
     debug: false
   });
 
-  var bot = controller.spawn({
+  const bot = controller.spawn({
     token: variables.JAMBABOT_USER_TOKEN,
   });
 
   function startRTM() {
-    bot.startRTM(function(error, bot, payload) {
+    bot.startRTM((error) => {
       if (error) {
         console.warn('Failed to start RTM');
         return setTimeout(startRTM, 60 * 1000);
       }
-      console.log('RTM started!');
-    })
+
+      return console.info('RTM started!');
+    });
   }
 
-  controller.on('rtm_close', function(bot, error) {
-    startRTM();
-  });
+  controller.on('rtm_close', startRTM);
 
   startRTM();
 
-  controller.hears('.*', ['direct_message', 'direct_mention', 'mention'], function(bot, botMessage) {
-    bot.api.users.info({user: botMessage.user}, function(error, usersInfoResponse) {
-      var userName = usersInfoResponse.user.name;
+  controller.hears('.*', ['direct_message', 'direct_mention', 'mention'], (botInstance, botMessage) => {
+    const api = botInstance.api;
 
-      bot.api.channels.info({channel: botMessage.channel}, function(error, channelsInfoResponse) {
-        bot.api.groups.info({channel: botMessage.channel}, function(error, groupsInfoResponse) {
-          var channel;
+    api.users.info({ user: botMessage.user }, (error, usersInfoResponse) => {
+      const userName = usersInfoResponse.user.name;
+
+      api.channels.info({ channel: botMessage.channel }, (errorChannels, channelsInfoResponse) => {
+        api.groups.info({ channel: botMessage.channel }, (errorGroups, groupsInfoResponse) => {
+          let channel;
+
           if (channelsInfoResponse.ok) {
             channel = channelsInfoResponse.channel.name;
           } else if (groupsInfoResponse.ok) {
             channel = groupsInfoResponse.group.name;
-          } else if (botMessage.event == 'direct_message') {
+          } else if (botMessage.event === 'direct_message') {
             channel = 'allow';
           } else {
             channel = 'unknown';
           }
 
-          var message = {
-            channel: channel,
-            userName: userName,
+          const message = {
+            channel,
+            userName,
             userText: botMessage.text.replace(/\s+/g, ' ').trim(),
             preFormattedText: botMessage.text
           };
 
-          console.log(message);
+          console.debug(message);
 
-          parseCommand(message, function(response) {
+          parseCommand(message, (response) => {
             if (response) {
-              bot.reply(botMessage, response);
+              botInstance.reply(botMessage, response);
             }
           });
         });
       });
     });
   });
-
 })();

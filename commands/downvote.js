@@ -1,17 +1,16 @@
-(function() {
+const mongodb = require('../integrations/mongodb');
 
-  var mongodb = require('../integrations/mongodb');
-
+(() => {
   function downvote(message, callback, dish) {
-    mongodb.isValidDish(dish, function(error, isValidDish) {
+    mongodb.isValidDish(dish, (error, isValidDish) => {
       if (error) {
         callback('Não entendi nada....');
         return;
       }
 
       if (isValidDish) {
-        mongodb.downvoteDish(message.userName, dish, function(error) {
-          if (error) {
+        mongodb.downvoteDish(message.userName, dish, (errorDownVote) => {
+          if (errorDownVote) {
             callback('Não entendi nada....');
             return;
           }
@@ -30,5 +29,4 @@
     description: '*silviao downvote [dish name]* : Adds an downvote for the specified dish',
     channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
-
 })();

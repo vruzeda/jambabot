@@ -1,9 +1,8 @@
-(function() {
+const mongodb = require('../integrations/mongodb');
 
-  var mongodb = require('../integrations/mongodb');
-
+(() => {
   function comenta(message, callback) {
-    mongodb.getRandomSilvioComment(function(error, comment) {
+    mongodb.getRandomSilvioComment((error, comment) => {
       if (error) {
         callback('Vixxxxxxxi...');
         return;
@@ -19,5 +18,4 @@
     description: '*silviao comenta*: I have reached sentience, try it out',
     channels: undefined
   };
-
 })();

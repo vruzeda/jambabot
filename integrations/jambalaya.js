@@ -1,31 +1,30 @@
-(function() {
+const request = require('request');
+const iconvlite = require('iconv-lite');
 
-  var request = require('request');
-  var iconvlite = require('iconv-lite');
+const mongodb = require('./mongodb');
 
-  var mongodb = require('./mongodb');
-
+(() => {
   function getJambaForDate(date, callback) {
-    mongodb.findJambaForDate(date, function(error, jamba) {
+    mongodb.findJambaForDate(date, (error, jambaForDate) => {
       if (error) {
         callback(error, undefined);
         return;
       }
 
-      if (jamba) {
-        callback(null, jamba);
+      if (jambaForDate) {
+        callback(null, jambaForDate);
       } else {
-        var today = new Date();
-        if (date.getMonth() == today.getMonth() && date.getFullYear() == today.getFullYear()) {
-          updateJambasFromSite(function(error) {
-            if (error) {
-              callback(error, undefined);
+        const today = new Date();
+        if (date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
+          updateJambasFromSite((errorUpdateFromSite) => {
+            if (errorUpdateFromSite) {
+              callback(errorUpdateFromSite, undefined);
               return;
             }
 
-            mongodb.findJambaForDate(date, function(error, jamba) {
-              if (error) {
-                callback(error, undefined);
+            mongodb.findJambaForDate(date, (errorFindJambaForDate, jamba) => {
+              if (errorFindJambaForDate) {
+                callback(errorFindJambaForDate, undefined);
                 return;
               }
 
@@ -44,32 +43,33 @@
   }
 
   function updateJambasFromSite(callback) {
-    request({ url: 'http://www.refeicoesjambalaya.com.br/cardapio.asp', encoding: null }, function(error, response, data) {
-      var jambaSite = iconvlite.decode(response.body, 'iso-8859-1');
-      var paragraphs = jambaSite.split('<p>');
-      var today = new Date();
+    request({ url: 'http://www.refeicoesjambalaya.com.br/cardapio.asp', encoding: null }, (error, response) => {
+      const jambaSite = iconvlite.decode(response.body, 'iso-8859-1');
+      const paragraphs = jambaSite.split('<p>');
+      const today = new Date();
 
-      var jambas = [];
-      var requestedJamba = undefined;
+      const jambas = [];
 
-      for (var day = 1; day <= 31; ++day) {
-        for (var i = 0; i < paragraphs.length; ++i) {
-          var paragraph = paragraphs[i];
+      for (let day = 1; day <= 31; day += 1) {
+        for (let i = 0; i < paragraphs.length; i += 1) {
+          const paragraph = paragraphs[i];
           if (paragraph.includes(`Dia: ${day} `)) {
-            var jamba = parseJambaForDateFromParagraph(new Date(today.getFullYear(), today.getMonth(), day), paragraph);
+            const date = new Date(today.getFullYear(), today.getMonth(), day);
+            const jamba = parseJambaForDateFromParagraph(date, paragraph);
             jambas.push(jamba);
           }
         }
       }
 
-      mongodb.saveDishes(jambas.reduce((dishes, jamba) => dishes.concat(jamba.mainDishes), []), function(errors) {
-        if (errors.filter((error) => error).length > 0) {
+      const validJambas = jambas.reduce((dishes, jamba) => dishes.concat(jamba.mainDishes), []);
+      mongodb.saveDishes(validJambas, (errorsSaveDishes) => {
+        if (errorsSaveDishes.filter(errorSaveDishes => errorSaveDishes).length > 0) {
           callback(new Error('Couldn\'t save all dishes from site.'));
           return;
         }
 
-        mongodb.saveJambas(jambas, function(errors) {
-          if (errors.filter((error) => error).length > 0) {
+        mongodb.saveJambas(jambas, (errorsSaveJambas) => {
+          if (errorsSaveJambas.filter(errorSaveJambas => errorSaveJambas).length > 0) {
             callback(new Error('Couldn\'t save all jambas from site.'));
             return;
           }
@@ -80,22 +80,20 @@
     });
   }
 
-  function parseJambaForDateFromParagraph(date, paragraph) {
-    paragraph = paragraph.replace(/<b>/g, '');
+  function parseJambaForDateFromParagraph(date, OriginalParagraph) {
+    let paragraph = OriginalParagraph.replace(/<b>/g, '');
     paragraph = paragraph.replace(/<\/b>/g, '');
     paragraph = paragraph.replace(/<font[^>]*>/g, '');
     paragraph = paragraph.replace(/<\/font>/g, '');
     paragraph = paragraph.replace(/<br>/g, '\n');
 
-    var jamba = {};
+    const jamba = {};
     jamba.date = date;
     jamba.mainDishes = [];
     jamba.garnishes = [];
     jamba.salads = [];
 
-    var lines = paragraph.split('\n');
-    for (var j = 0; j < lines.length; ++j) {
-      var line = lines[j];
+    paragraph.split('\n').forEach((line) => {
       if (line.includes('Pratos principais: ')) {
         jamba.mainDishes = parseJambaLine(line, 'Pratos principais: ');
       } else if (line.includes('Guarnições: ')) {
@@ -103,24 +101,24 @@
       } else if (line.includes('Saladas: ')) {
         jamba.salads = parseJambaLine(line, 'Saladas: ');
       }
-    }
+    });
 
     return jamba;
   }
 
   function parseJambaLine(jambaLine, header) {
-    return jambaLine.substring(jambaLine.indexOf(header) + header.length).split(' - ').reduce(function(foods, lineComponent) {
-      if (lineComponent.length > 0) {
-        foods.push(lineComponent.trim());
-      }
+    return jambaLine.substring(jambaLine.indexOf(header) + header.length).split(' - ')
+      .reduce((foods, lineComponent) => {
+        if (lineComponent.length > 0) {
+          foods.push(lineComponent.trim());
+        }
 
-      return foods;
-    }, []);
+        return foods;
+      }, []);
   }
 
   module.exports = {
-    getJambaForDate: getJambaForDate,
-    updateJambasFromSite: updateJambasFromSite
+    getJambaForDate,
+    updateJambasFromSite
   };
-
 })();

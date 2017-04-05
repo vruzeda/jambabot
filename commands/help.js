@@ -1,24 +1,24 @@
-(function() {
+const isValidCommand = require('./utils/isValidCommand');
+const commands = require('./commands');
 
-  var isValidCommand = require('./utils/isValidCommand');
-
+(() => {
   function help(message, callback, invalidCommand) {
-    var help;
+    let helpText;
 
     if (invalidCommand) {
-      help = 'Vixxxxxxxi... não entendi nada ..... "' + invalidCommand + '". Veja aii :\n>>>';
+      helpText = `Vixxxxxxxi... não entendi nada ..... "${invalidCommand}". Veja aii :\n>>>`;
     } else {
-      help = 'Então o que me diz disso aiiii :\n>>>';
+      helpText = 'Então o que me diz disso aiiii :\n>>>';
     }
 
-    var commands = require('./commands');
-    for (var command of commands) {
+    commands.forEach((command) => {
       if (isValidCommand(command, message)) {
-        help += command.description + '\n';
+        helpText += `${command.description}\n`;
       }
-    }
+    });
 
-    callback(help);
+
+    callback(helpText);
   }
 
   module.exports = {
@@ -27,5 +27,4 @@
     description: '*silviao ajuda* : shows a list of valid commands',
     channels: undefined
   };
-
 })();

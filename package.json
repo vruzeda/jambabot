@@ -15,7 +15,7 @@
     "start": "node jambabot.js",
     "build": "npm run lint",
     "test": "npm run lint",
-    "lint": "node node_modules/eslint/bin/eslint.js cardapio.js countdown.js jambabot.js updateJambas.js commands/**/*.js integrations/**/*.js"
+    "lint": "node node_modules/eslint/bin/eslint.js *.js commands/**/*.js integrations/**/*.js"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

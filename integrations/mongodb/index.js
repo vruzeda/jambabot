@@ -1,14 +1,14 @@
-(function() {
+const mongoose = require('mongoose');
+const Dish = require('./Dish');
+const DishImage = require('./DishImage');
+const DishRating = require('./DishRating');
+const Jamba = require('./Jamba');
+const SilvioComment = require('./SilvioComment');
 
-  var mongoose = require('mongoose');
+(() => {
   mongoose.Promise = global.Promise;
   mongoose.connect('mongodb://localhost/jambadb');
 
-  var Dish = require('./Dish');
-  var DishImage = require('./DishImage');
-  var DishRating = require('./DishRating');
-  var Jamba = require('./Jamba');
-  var SilvioComment = require('./SilvioComment')
 
   module.exports = {
     isValidDish: Dish.isValidDish,
@@ -27,5 +27,4 @@
     getRandomSilvioComment: SilvioComment.getRandomSilvioComment,
     addSilvioComment: SilvioComment.addSilvioComment
   };
-
 })();

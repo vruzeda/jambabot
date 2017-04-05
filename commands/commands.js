@@ -1,5 +1,5 @@
-(function() {
-
+(() => {
+  /* eslint global-require: 0 */
   module.exports = [
     require('./cardapio'),
     require('./addComment'),
@@ -11,5 +11,4 @@
     require('./rating'),
     require('./help')
   ];
-
 })();

@@ -22,7 +22,8 @@ module.exports = {
   "rules": {
     "comma-dangle": 0,
     "no-use-before-define": [ "error", { "functions": false, "classes": true } ],
-    "no-console": ["error", {"allow": [ "warn", "error", "info" ] } ],
-    "no-param-reassign": ["error", { "props": false }]
+    "no-console": ["error", {"allow": [ "warn", "error", "info", "debug", "log" ] } ],
+    "no-param-reassign": ["error", { "props": false }],
+    "radix": ["error", "as-needed"]
   }
 };

@@ -1,16 +1,10 @@
-(function() {
+const isValidCommand = require('./utils/isValidCommand');
+const commands = require('./commands');
 
-  var isValidCommand = require('./utils/isValidCommand');
-
+(() => {
   function parseCommand(message, callback) {
-    var parsed = false;
-
-    var commands = require('./commands');
-
-    for (var i = 0; !parsed && i < commands.length; ++i) {
-      var command = commands[i];
-
-      var match;
+    commands.some((command) => {
+      let match;
 
       if (command.acceptsPreFormattedText) {
         match = message.preFormattedText.match(command.pattern);
@@ -26,11 +20,13 @@
         } else {
           callback('C fude kkkkk');
         }
-        parsed = true;
+
+        return true;
       }
-    }
+
+      return false;
+    });
   }
 
   module.exports = parseCommand;
-
 })();

@@ -1,24 +1,24 @@
 #!/usr/bin/env node
 
-var request = require('request');
+const request = require('request');
 
-var variables = require('./variables');
-var cardapio = require('./commands/cardapio').handler;
-var spoiler = require('./commands/spoiler').handler;
+const variables = require('./variables');
+const cardapio = require('./commands/cardapio').handler;
+const spoiler = require('./commands/spoiler').handler;
 
-function postJambaToSlack(cardapio) {
-  if (!cardapio) {
+function postJambaToSlack(cardapioStr) {
+  if (!cardapioStr) {
     return;
   }
 
-  var url;
+  let url;
   if (variables.JAMBABOT_DEBUG) {
     url = variables.JAMBABOT_DEBUG_URL;
   } else {
     url = variables.JAMBABOT_PROD_URL;
   }
 
-  request.post({ url: url, json: {"text" : cardapio} }, function(error) {
+  request.post({ url, json: { text: cardapioStr } }, (error) => {
     if (error) {
       console.error(error);
       process.exit(1);
@@ -28,7 +28,7 @@ function postJambaToSlack(cardapio) {
   });
 }
 
-var today = new Date();
+const today = new Date();
 if (today.getHours() < 11) {
   cardapio(undefined, postJambaToSlack);
 } else {
