@@ -131,3 +131,5 @@ jspm_packages
 
 nohup.out
 variables.js
+*.iml
+.idea/
