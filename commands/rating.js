@@ -2,20 +2,20 @@ const mongodb = require('../integrations/mongodb');
 
 (() => {
   function rating(message, callback, dish) {
-    mongodb.isValidDish(dish, (error, isValidDish) => {
-      if (error) {
+    mongodb.isValidDish(dish, (errorValidatingDish, isValidDish) => {
+      if (errorValidatingDish) {
         callback('Não entendi nada....');
         return;
       }
 
       if (isValidDish) {
-        mongodb.getDishRating(dish, (errorDishRating, dishRating) => {
-          if (errorDishRating) {
+        mongodb.getDishRating(dish, (errorGettingDishRating, storedDishRating) => {
+          if (errorGettingDishRating) {
             callback('Não sei de nada....\nMais é show....');
             return;
           }
 
-          callback(`Hummm....\n:arrow_up_small: ${dishRating.upvotes} :arrow_down_small: ${dishRating.downvotes}`);
+          callback(`Hummm....\n:arrow_up_small: ${storedDishRating.upvotes} :arrow_down_small: ${storedDishRating.downvotes}`);
         });
       } else {
         callback('C fude. Kkkkkkkk');

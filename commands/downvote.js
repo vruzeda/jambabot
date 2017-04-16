@@ -2,15 +2,15 @@ const mongodb = require('../integrations/mongodb');
 
 (() => {
   function downvote(message, callback, dish) {
-    mongodb.isValidDish(dish, (error, isValidDish) => {
-      if (error) {
+    mongodb.isValidDish(dish, (errorValidatingDish, isValidDish) => {
+      if (errorValidatingDish) {
         callback('Não entendi nada....');
         return;
       }
 
       if (isValidDish) {
-        mongodb.downvoteDish(message.userName, dish, (errorDownVote) => {
-          if (errorDownVote) {
+        mongodb.downvoteDish(message.userName, dish, (errorDownvoting) => {
+          if (errorDownvoting) {
             callback('Não entendi nada....');
             return;
           }

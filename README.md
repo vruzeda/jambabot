@@ -1,6 +1,5 @@
 # Jambabot [![Build Status](https://travis-ci.org/vruzeda/jambabot.svg?branch=master)](https://travis-ci.org/vruzeda/jambabot)
 
-
 This repository contains 3 different Slack's bot applications, all relating to Refeições Jambalaya's daily menu.
 Basically, it parses the menu provided in http://www.refeicoesjambalaya.com.br/cardapio.asp and post it to a Slack's channel.
 

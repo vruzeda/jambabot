@@ -4,10 +4,11 @@ const DishImage = require('./DishImage');
 const DishRating = require('./DishRating');
 const Jamba = require('./Jamba');
 const SilvioComment = require('./SilvioComment');
+const variables = require('../../variables');
 
 (() => {
   mongoose.Promise = global.Promise;
-  mongoose.connect('mongodb://localhost/jambadb');
+  mongoose.connect(variables.MONGO_CONNECTION_STR);
 
 
   module.exports = {

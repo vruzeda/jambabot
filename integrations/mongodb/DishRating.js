@@ -30,10 +30,10 @@ const mongoose = require('mongoose');
   }
 
   function upvoteDish(userName, dish, callback) {
-    findUserDishRating(userName, dish, (errorFindDishRating, dishRating) => {
-      let validDishRating = dishRating;
+    findUserDishRating(userName, dish, (errorFindindDishRating, storedDishRating) => {
+      let validDishRating = storedDishRating;
 
-      if (!dishRating) {
+      if (!validDishRating) {
         validDishRating = new DishRating({
           dish: dish.toLowerCase(),
           userName: userName.toLowerCase()
@@ -50,8 +50,8 @@ const mongoose = require('mongoose');
   }
 
   function downvoteDish(userName, dish, callback) {
-    findUserDishRating(userName, dish, (errorFindUserDishRating, dishRating) => {
-      let validDishRating = dishRating;
+    findUserDishRating(userName, dish, (errorFindingUserDishRating, storedDishRating) => {
+      let validDishRating = storedDishRating;
 
       if (!validDishRating) {
         validDishRating = new DishRating({
@@ -63,8 +63,8 @@ const mongoose = require('mongoose');
       validDishRating.upvotes = 0;
       validDishRating.downvotes = 1;
 
-      validDishRating.save((errorSaveDishRating) => {
-        callback(errorSaveDishRating);
+      validDishRating.save((errorSavingDishRating) => {
+        callback(errorSavingDishRating);
       });
     });
   }

@@ -3,5 +3,3 @@ node_js:
   - "node"
 before_script:
   - cp variables.js.stub variables.js
-
-

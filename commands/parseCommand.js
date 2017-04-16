@@ -1,8 +1,10 @@
 const isValidCommand = require('./utils/isValidCommand');
-const commands = require('./commands');
 
 (() => {
+  /* eslint global-require: 0 */
   function parseCommand(message, callback) {
+    const commands = require('./commands');
+
     commands.some((command) => {
       let match;
 

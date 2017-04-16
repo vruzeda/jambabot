@@ -5,26 +5,26 @@ const mongodb = require('./mongodb');
 
 (() => {
   function getJambaForDate(date, callback) {
-    mongodb.findJambaForDate(date, (error, jambaForDate) => {
-      if (error) {
-        callback(error, undefined);
+    mongodb.findJambaForDate(date, (errorFindingJambaForDate, storedJambaForDate) => {
+      if (errorFindingJambaForDate) {
+        callback(errorFindingJambaForDate, undefined);
         return;
       }
 
-      if (jambaForDate) {
-        callback(null, jambaForDate);
+      if (storedJambaForDate) {
+        callback(null, storedJambaForDate);
       } else {
         const today = new Date();
         if (date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
-          updateJambasFromSite((errorUpdateFromSite) => {
-            if (errorUpdateFromSite) {
-              callback(errorUpdateFromSite, undefined);
+          updateJambasFromSite((errorUpdatingFromSite) => {
+            if (errorUpdatingFromSite) {
+              callback(errorUpdatingFromSite, undefined);
               return;
             }
 
-            mongodb.findJambaForDate(date, (errorFindJambaForDate, jamba) => {
-              if (errorFindJambaForDate) {
-                callback(errorFindJambaForDate, undefined);
+            mongodb.findJambaForDate(date, (errorFindingJambaForDateAfterUpdate, jamba) => {
+              if (errorFindingJambaForDateAfterUpdate) {
+                callback(errorFindingJambaForDateAfterUpdate, undefined);
                 return;
               }
 
@@ -61,15 +61,15 @@ const mongodb = require('./mongodb');
         }
       }
 
-      const validJambas = jambas.reduce((dishes, jamba) => dishes.concat(jamba.mainDishes), []);
-      mongodb.saveDishes(validJambas, (errorsSaveDishes) => {
-        if (errorsSaveDishes.filter(errorSaveDishes => errorSaveDishes).length > 0) {
+      const mainDishes = jambas.reduce((dishes, jamba) => dishes.concat(jamba.mainDishes), []);
+      mongodb.saveDishes(mainDishes, (errorsSavingMainDishes) => {
+        if (errorsSavingMainDishes.filter(errorSaveDishes => errorSaveDishes).length > 0) {
           callback(new Error('Couldn\'t save all dishes from site.'));
           return;
         }
 
-        mongodb.saveJambas(jambas, (errorsSaveJambas) => {
-          if (errorsSaveJambas.filter(errorSaveJambas => errorSaveJambas).length > 0) {
+        mongodb.saveJambas(jambas, (errorsSavingJambas) => {
+          if (errorsSavingJambas.filter(errorSaveJambas => errorSaveJambas).length > 0) {
             callback(new Error('Couldn\'t save all jambas from site.'));
             return;
           }
@@ -80,8 +80,8 @@ const mongodb = require('./mongodb');
     });
   }
 
-  function parseJambaForDateFromParagraph(date, OriginalParagraph) {
-    let paragraph = OriginalParagraph.replace(/<b>/g, '');
+  function parseJambaForDateFromParagraph(date, originalParagraph) {
+    let paragraph = originalParagraph.replace(/<b>/g, '');
     paragraph = paragraph.replace(/<\/b>/g, '');
     paragraph = paragraph.replace(/<font[^>]*>/g, '');
     paragraph = paragraph.replace(/<\/font>/g, '');
@@ -107,14 +107,8 @@ const mongodb = require('./mongodb');
   }
 
   function parseJambaLine(jambaLine, header) {
-    return jambaLine.substring(jambaLine.indexOf(header) + header.length).split(' - ')
-      .reduce((foods, lineComponent) => {
-        if (lineComponent.length > 0) {
-          foods.push(lineComponent.trim());
-        }
-
-        return foods;
-      }, []);
+    const lines = jambaLine.substring(jambaLine.indexOf(header) + header.length).split(' - ');
+    return lines.filter(line => line.trim().length > 0);
   }
 
   module.exports = {

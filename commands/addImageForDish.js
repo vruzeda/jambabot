@@ -2,47 +2,47 @@ const mongodb = require('../integrations/mongodb');
 const request = require('request');
 
 (() => {
-  function checkIfImageExists(image, callback) {
+  function checkIfImageExists(image) {
     console.log(`Checking if ${image} exists...`);
 
-    request({ url: image }, (error, response) => {
-      const exists = (response.statusCode === 200);
-      console.log(`... ${exists ? 'it does.' : 'it doesn\'t.'}`);
-      callback(exists, image);
+    return new Promise((resolve, reject) => {
+      request({ url: image }, (error, response) => {
+        const exists = (response.statusCode === 200);
+        console.log(`... ${exists ? 'it does.' : 'it doesn\'t.'}`);
+        if (exists) {
+          resolve(image);
+        } else {
+          reject(response.statusCode);
+        }
+      });
     });
   }
 
   function getThumbnailUrlFromImageUrl(image, callback) {
     if (image.match(/i\.imgur\.com/)) {
-      checkIfImageExists(image.replace(/^(.*)(\.[^.]*)$/, '$1l$2'), (exists, thumbnail) => {
-        if (exists) {
-          callback(thumbnail);
-        } else {
-          checkIfImageExists(image.replace(/^(.*).(\.[^.]*)$/, '$1l$2'), (exists2, thumbnail2) => {
-            if (exists2) {
-              callback(thumbnail2);
-            } else {
-              callback(image);
-            }
-          });
-        }
-      });
+      checkIfImageExists(image.replace(/^(.*)(\.[^.]*)$/, '$1l$2'))
+        .then(callback)
+        .catch(() => {
+          checkIfImageExists(image.replace(/^(.*).(\.[^.]*)$/, '$1l$2'))
+            .then(callback)
+            .catch(() => callback(image));
+        });
     } else {
       callback(image);
     }
   }
 
   function addImageForDish(message, callback, dishName, dishImageUrl) {
-    mongodb.isValidDish(dishName, (error, isValidDish) => {
-      if (error) {
+    mongodb.isValidDish(dishName, (errorValidatingDish, isValidDish) => {
+      if (errorValidatingDish) {
         callback('Não entendi nada....');
         return;
       }
 
       if (isValidDish) {
         getThumbnailUrlFromImageUrl(dishImageUrl.replace(/^<(.*)>$/, '$1'), (thumbnail) => {
-          mongodb.addImageForDish(dishName, thumbnail, (errorAddImage) => {
-            if (errorAddImage) {
+          mongodb.addImageForDish(dishName, thumbnail, (errorAddingImage) => {
+            if (errorAddingImage) {
               callback('Vixxxxxxi c lascou kkkkk');
               return;
             }

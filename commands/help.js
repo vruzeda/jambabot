@@ -1,9 +1,10 @@
 const isValidCommand = require('./utils/isValidCommand');
-const commands = require('./commands');
 
 (() => {
+  /* eslint global-require: 0 */
   function help(message, callback, invalidCommand) {
     let helpText;
+    const commands = require('./commands');
 
     if (invalidCommand) {
       helpText = `Vixxxxxxxi... não entendi nada ..... "${invalidCommand}". Veja aii :\n>>>`;
@@ -16,7 +17,6 @@ const commands = require('./commands');
         helpText += `${command.description}\n`;
       }
     });
-
 
     callback(helpText);
   }

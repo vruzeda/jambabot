@@ -38,7 +38,7 @@ const mongoose = require('mongoose');
     if (index < jambas.length) {
       const jamba = jambas[index];
       const formattedDate = `${jamba.date.getFullYear()}-${jamba.date.getMonth() + 1}-${jamba.date.getDate()}`;
-      const upVote = {
+      const jambaComponents = {
         $set: {
           mainDishes: jamba.mainDishes,
           garnishes: jamba.garnishes,
@@ -46,7 +46,7 @@ const mongoose = require('mongoose');
         }
       };
 
-      Jamba.update({ formattedDate }, upVote, { upsert: true }, (error) => {
+      Jamba.update({ formattedDate }, jambaComponents, { upsert: true }, (error) => {
         errors.push(error);
         recursivelySaveJambas(jambas, index + 1, errors, callback);
       });

@@ -51,10 +51,11 @@ const parseCommand = require('./commands/parseCommand');
     bot.startRTM((error) => {
       if (error) {
         console.warn('Failed to start RTM');
-        return setTimeout(startRTM, 60 * 1000);
+        setTimeout(startRTM, 60 * 1000);
+        return;
       }
 
-      return console.info('RTM started!');
+      console.info('RTM started!');
     });
   }
 
