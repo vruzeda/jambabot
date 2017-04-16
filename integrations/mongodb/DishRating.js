@@ -43,8 +43,8 @@ const mongoose = require('mongoose');
       validDishRating.upvotes = 1;
       validDishRating.downvotes = 0;
 
-      validDishRating.save((errorSaveDishRating) => {
-        callback(errorSaveDishRating);
+      validDishRating.save((errorSavingDishRating) => {
+        callback(errorSavingDishRating);
       });
     });
   }

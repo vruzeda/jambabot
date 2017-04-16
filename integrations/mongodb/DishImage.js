@@ -36,11 +36,11 @@ const mongoose = require('mongoose');
   }
 
   function addImageForDish(dish, image, callback) {
-    findDishImage(dish, (error, dishImage) => {
-      let validDishImage = dishImage;
+    findDishImage(dish, (error, storedDishImage) => {
+      let validDishImage = storedDishImage;
 
-      if (dishImage) {
-        dishImage.image = image;
+      if (validDishImage) {
+        validDishImage.image = image;
       } else {
         validDishImage = new DishImage({ dish: dish.toLowerCase(), image });
       }
