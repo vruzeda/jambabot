@@ -46,23 +46,16 @@
 
   var bot = controller.spawn({
     token: variables.JAMBABOT_USER_TOKEN,
+    retry: Infinity
   });
 
-  function startRTM() {
-    bot.startRTM(function(error, bot, payload) {
-      if (error) {
-        console.warn('Failed to start RTM');
-        return setTimeout(startRTM, 60 * 1000);
-      }
-      console.log('RTM started!');
-    })
-  }
-
-  controller.on('rtm_close', function(bot, error) {
-    startRTM();
+  bot.startRTM(function(error, bot, payload) {
+    if (error) {
+      console.warn('Failed to start RTM');
+      return setTimeout(startRTM, 60 * 1000);
+    }
+    console.log('RTM started!');
   });
-
-  startRTM();
 
   controller.hears('.*', ['direct_message', 'direct_mention', 'mention'], function(bot, botMessage) {
     bot.api.users.info({user: botMessage.user}, function(error, usersInfoResponse) {
