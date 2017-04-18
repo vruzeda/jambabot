@@ -1,20 +1,19 @@
-(function() {
+const mongoose = require('mongoose');
 
-  var mongoose = require('mongoose');
-
-  var SilvioCommentSchema = mongoose.Schema({
+(() => {
+  const SilvioCommentSchema = mongoose.Schema({
     comment: { type: String }
   });
-  var SilvioComment = mongoose.model('SilvioComment', SilvioCommentSchema);
+  const SilvioComment = mongoose.model('SilvioComment', SilvioCommentSchema);
 
   function getRandomSilvioComment(callback) {
-    SilvioComment.aggregate({ $sample: { size: 1 }}, function(error, silvioComments) {
+    SilvioComment.aggregate({ $sample: { size: 1 } }, (error, silvioComments) => {
       if (error) {
         callback(error, undefined);
         return;
       }
 
-      if (silvioComments.length == 0) {
+      if (silvioComments.length === 0) {
         callback(new Error('No comments available.'), undefined);
         return;
       }
@@ -24,15 +23,14 @@
   }
 
   function addSilvioComment(comment, callback) {
-    var silvioComment = new SilvioComment({comment: comment});
-    silvioComment.save(function(error) {
+    const silvioComment = new SilvioComment({ comment });
+    silvioComment.save((error) => {
       callback(error);
     });
   }
 
   module.exports = {
-    getRandomSilvioComment: getRandomSilvioComment,
-    addSilvioComment: addSilvioComment
+    getRandomSilvioComment,
+    addSilvioComment
   };
-
 })();

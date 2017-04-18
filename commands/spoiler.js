@@ -1,15 +1,14 @@
-(function() {
+const getJambaPostForDate = require('./utils/getJambaPostForDate');
 
-  var getJambaPostForDate = require('./utils/getJambaPostForDate');
-
+(() => {
   function spoiler(message, callback) {
-    var date = new Date();
+    const date = new Date();
     date.setDate(date.getDate() + 1);
 
-    if (date.getDay() == 0) {
+    if (date.getDay() === 0) {
       // Sunday -> Monday
       date.setDate(date.getDate() + 1);
-    } else if (date.getDay() == 6) {
+    } else if (date.getDay() === 6) {
       // Saturday -> Monday
       date.setDate(date.getDate() + 2);
     }
@@ -23,5 +22,4 @@
     description: '*silviao spoiler* : Replies with tomorrow\'s menu',
     channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
-
 })();

@@ -1,16 +1,12 @@
-(function() {
+const isValidCommand = require('./utils/isValidCommand');
 
-  var isValidCommand = require('./utils/isValidCommand');
-
+(() => {
+  /* eslint global-require: 0 */
   function parseCommand(message, callback) {
-    var parsed = false;
+    const commands = require('./commands');
 
-    var commands = require('./commands');
-
-    for (var i = 0; !parsed && i < commands.length; ++i) {
-      var command = commands[i];
-
-      var match;
+    commands.some((command) => {
+      let match;
 
       if (command.acceptsPreFormattedText) {
         match = message.preFormattedText.match(command.pattern);
@@ -22,15 +18,20 @@
 
       if (match) {
         if (isValidCommand(command, message)) {
-          command.handler.apply(this, [message, callback].concat(match.slice(1)));
+          const params = [message, callback];
+          params.push(...match.slice(1));
+
+          command.handler(...params);
         } else {
           callback('C fude kkkkk');
         }
-        parsed = true;
+
+        return true;
       }
-    }
+
+      return false;
+    });
   }
 
   module.exports = parseCommand;
-
 })();

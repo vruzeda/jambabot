@@ -1,12 +1,11 @@
-(function() {
+const getJambaPostForDate = require('./utils/getJambaPostForDate');
 
-  var getJambaPostForDate = require('./utils/getJambaPostForDate');
-
+(() => {
   function cardapio(message, callback, dateString) {
-    var date = new Date();
+    const date = new Date();
 
     if (dateString) {
-      var dateComponents = dateString.split('/');
+      const dateComponents = dateString.split('/');
       date.setMonth(parseInt(dateComponents[1]) - 1);
       date.setDate(parseInt(dateComponents[0]));
     }
@@ -20,5 +19,4 @@
     description: '*silviao cardapio [date/month]* : Replies with today\'s menu (with some mockery depending on the time it\'s executed); if a date and month where supplied, it will search for that day\'s menu',
     channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
-
 })();

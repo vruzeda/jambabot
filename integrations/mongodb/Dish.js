@@ -1,20 +1,19 @@
-(function() {
+const mongoose = require('mongoose');
 
-  var mongoose = require('mongoose');
-
-  var DishSchema = mongoose.Schema({
+(() => {
+  const DishSchema = mongoose.Schema({
     dish: { type: String, unique: true }
   });
-  var Dish = mongoose.model('Dish', DishSchema);
+  const Dish = mongoose.model('Dish', DishSchema);
 
   function isValidDish(dish, callback) {
-    Dish.findOne({dish: dish.toLowerCase()}, function(error, dish) {
+    Dish.findOne({ dish: dish.toLowerCase() }, (error, storedDish) => {
       if (error) {
         callback(error, undefined);
         return;
       }
 
-      callback(null, !!dish);
+      callback(null, !!storedDish);
     });
   }
 
@@ -24,17 +23,17 @@
 
   function recursivelySaveDishes(dishes, index, errors, callback) {
     if (index < dishes.length) {
-      var dish = dishes[index];
-      isValidDish(dish, function(error, isValidDish) {
+      const dish = dishes[index];
+      isValidDish(dish, (error, isAValidDish) => {
         if (error) {
           errors.push(error);
           recursivelySaveDishes(dishes, index + 1, errors, callback);
           return;
         }
 
-        if (!isValidDish) {
-          Dish.create({dish: dish.toLowerCase()}, function(error) {
-            errors.push(error);
+        if (!isAValidDish) {
+          Dish.create({ dish: dish.toLowerCase() }, (errorCreatingDish) => {
+            errors.push(errorCreatingDish);
             recursivelySaveDishes(dishes, index + 1, errors, callback);
           });
         } else {
@@ -48,8 +47,7 @@
   }
 
   module.exports = {
-    isValidDish: isValidDish,
-    saveDishes: saveDishes
+    isValidDish,
+    saveDishes
   };
-
 })();

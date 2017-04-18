@@ -1,48 +1,48 @@
-(function() {
+const mongodb = require('../integrations/mongodb');
+const request = require('request');
 
-  var mongodb = require('../integrations/mongodb');
-  var request = require('request');
-
-  function checkIfImageExists(image, callback) {
+(() => {
+  function checkIfImageExists(image) {
     console.log(`Checking if ${image} exists...`);
-    request({ url: image }, function(error, response, data) {
-      var exists = (response.statusCode == 200);
-      console.log(`... ${exists ? 'it does.' : 'it doesn\'t.'}`);
-      callback(exists, image);
+
+    return new Promise((resolve, reject) => {
+      request({ url: image }, (error, response) => {
+        const exists = (response.statusCode === 200);
+        console.log(`... ${exists ? 'it does.' : 'it doesn\'t.'}`);
+        if (exists) {
+          resolve(image);
+        } else {
+          reject(response.statusCode);
+        }
+      });
     });
   }
 
   function getThumbnailUrlFromImageUrl(image, callback) {
     if (image.match(/i\.imgur\.com/)) {
-      checkIfImageExists(image.replace(/^(.*)(\.[^.]*)$/, '$1l$2'), function(exists, thumbnail) {
-        if (exists) {
-          callback(thumbnail);
-        } else {
-          checkIfImageExists(image.replace(/^(.*).(\.[^.]*)$/, '$1l$2'), function(exists, thumbnail) {
-            if (exists) {
-              callback(thumbnail);
-            } else {
-              callback(image);
-            }
-          });
-        }
-      });
+      checkIfImageExists(image.replace(/^(.*)(\.[^.]*)$/, '$1l$2'))
+        .then(callback)
+        .catch(() => {
+          checkIfImageExists(image.replace(/^(.*).(\.[^.]*)$/, '$1l$2'))
+            .then(callback)
+            .catch(() => callback(image));
+        });
     } else {
       callback(image);
     }
   }
 
   function addImageForDish(message, callback, dishName, dishImageUrl) {
-    mongodb.isValidDish(dishName, function(error, isValidDish) {
-      if (error) {
+    mongodb.isValidDish(dishName, (errorValidatingDish, isValidDish) => {
+      if (errorValidatingDish) {
         callback('Não entendi nada....');
         return;
       }
 
       if (isValidDish) {
-        getThumbnailUrlFromImageUrl(dishImageUrl.replace(/^<(.*)>$/, '$1'), function(thumbnail) {
-          mongodb.addImageForDish(dishName, thumbnail, function(error) {
-            if (error) {
+        getThumbnailUrlFromImageUrl(dishImageUrl.replace(/^<(.*)>$/, '$1'), (thumbnail) => {
+          mongodb.addImageForDish(dishName, thumbnail, (errorAddingImage) => {
+            if (errorAddingImage) {
               callback('Vixxxxxxi c lascou kkkkk');
               return;
             }
@@ -62,5 +62,4 @@
     description: '*silviao add image [dish name] [dish image URL]* : Persists an image for the specified dish',
     channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
   };
-
 })();

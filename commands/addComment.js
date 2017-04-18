@@ -1,9 +1,8 @@
-(function() {
+const mongodb = require('../integrations/mongodb');
 
-  var mongodb = require('../integrations/mongodb');
-
+(() => {
   function addComment(message, callback, comment) {
-    mongodb.addSilvioComment(comment, function(error) {
+    mongodb.addSilvioComment(comment, (error) => {
       if (error) {
         console.log(error);
         callback('Não entendi nada....');
@@ -11,7 +10,7 @@
       }
 
       callback('Show');
-    })
+    });
   }
 
   module.exports = {
@@ -21,5 +20,4 @@
     channels: ['admin'],
     acceptsPreFormattedText: true
   };
-
 })();

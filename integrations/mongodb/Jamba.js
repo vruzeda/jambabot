@@ -1,19 +1,18 @@
-(function() {
+const mongoose = require('mongoose');
 
-  var mongoose = require('mongoose');
-
-  var JambaSchema = mongoose.Schema({
+(() => {
+  const JambaSchema = mongoose.Schema({
     formattedDate: { type: String, unique: true },
     mainDishes: [String],
     garnishes: [String],
     salads: [String]
   });
-  var Jamba = mongoose.model('Jamba', JambaSchema);
+  const Jamba = mongoose.model('Jamba', JambaSchema);
 
   function findJambaForDate(date, callback) {
-    var formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
-    Jamba.findOne({formattedDate: formattedDate}, function(error, jamba) {
+    Jamba.findOne({ formattedDate }, (error, jamba) => {
       if (error) {
         callback(error, undefined);
         return;
@@ -37,10 +36,17 @@
 
   function recursivelySaveJambas(jambas, index, errors, callback) {
     if (index < jambas.length) {
-      var jamba = jambas[index];
-      var formattedDate = `${jamba.date.getFullYear()}-${jamba.date.getMonth() + 1}-${jamba.date.getDate()}`;
+      const jamba = jambas[index];
+      const formattedDate = `${jamba.date.getFullYear()}-${jamba.date.getMonth() + 1}-${jamba.date.getDate()}`;
+      const jambaComponents = {
+        $set: {
+          mainDishes: jamba.mainDishes,
+          garnishes: jamba.garnishes,
+          salads: jamba.salads
+        }
+      };
 
-      Jamba.update({formattedDate: formattedDate}, {$set: {mainDishes: jamba.mainDishes, garnishes: jamba.garnishes, salads: jamba.salads}}, {upsert: true}, function(error) {
+      Jamba.update({ formattedDate }, jambaComponents, { upsert: true }, (error) => {
         errors.push(error);
         recursivelySaveJambas(jambas, index + 1, errors, callback);
       });
@@ -50,9 +56,7 @@
   }
 
   module.exports = {
-    findJambaForDate: findJambaForDate,
-    saveJambas: saveJambas
+    findJambaForDate,
+    saveJambas
   };
-
-
 })();
