@@ -28,7 +28,7 @@ function postCountdownToSlack(countdown) {
 
 var jambaTime = new Date();
 jambaTime.setHours(11);
-jambaTime.setMinutes(30);
+jambaTime.setMinutes(0);
 jambaTime.setSeconds(0);
 jambaTime.setMilliseconds(0);
 
