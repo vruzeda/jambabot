@@ -10,7 +10,7 @@ const getJambaPostForDate = require('./utils/getJambaPostForDate');
       date.setDate(parseInt(dateComponents[0]));
     }
 
-    getJambaPostForDate(callback, date);
+    getJambaPostForDate(date, callback);
   }
 
   module.exports = {

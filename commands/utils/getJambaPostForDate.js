@@ -3,7 +3,7 @@ const jambalaya = require('../../integrations/jambalaya');
 const mongodb = require('../../integrations/mongodb');
 
 (() => {
-  function getJambaPostForDate(callback, date) {
+  function getJambaPostForDate(date, callback) {
     checkValidDate(date)
       .then(() => getJambaForDate(date))
       .then(jamba => generatePostText(date, jamba))
