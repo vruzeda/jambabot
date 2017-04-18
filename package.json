@@ -8,7 +8,7 @@
     "express": "^4.15.2",
     "google-images": "^1.0.0",
     "iconv-lite": "^0.4.15",
-    "mongoose": "^4.9.3",
+    "mongoose": "^4.9.4",
     "request": "^2.81.0"
   },
   "scripts": {
