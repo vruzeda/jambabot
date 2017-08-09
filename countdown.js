@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-const request = require('request');
-const variables = require('./variables');
 const postToSlack = require('./integrations/incomingWebhook').postToSlack;
 
 const jambaTime = new Date();

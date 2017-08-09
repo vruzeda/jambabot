@@ -16,7 +16,7 @@ const variables = require('./variables');
       }
 
       console.info('RTM started!');
-    })
+    });
   });
 
   slack.controller.hears('.*', ['direct_message', 'direct_mention', 'mention'], (botInstance, botMessage) => {

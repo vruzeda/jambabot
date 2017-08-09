@@ -3,8 +3,8 @@
 
 module.exports = {
   JAMBABOT_DEBUG: false,
-  JAMBABOT_DEBUG_URL: 'Incoming Webhook's URL for development',
-  JAMBABOT_PROD_URL: 'Incoming Webhook's URL for production',
+  JAMBABOT_DEBUG_URL: 'Incoming Webhook URL for development',
+  JAMBABOT_PROD_URL: 'Incoming Webhook URL for production',
 
   JAMBABOT_USER_TOKEN: 'Token for userbot integration',
 
