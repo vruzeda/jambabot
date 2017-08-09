@@ -7,10 +7,8 @@ const variables = require('../variables');
     debug: false
   });
 
-  exports.bot = exports.controller.spawn({
-    token: variables.JAMBABOT_USER_TOKEN,
+  exports.bot = (userToken) => exports.controller.spawn({
+    token: userToken,
     retry: Infinity
   });
-
-  exports.api = exports.bot.api;
 })();
