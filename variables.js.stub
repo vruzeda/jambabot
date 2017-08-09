@@ -3,13 +3,10 @@
 
 module.exports = {
   JAMBABOT_DEBUG: false,
-  JAMBABOT_DEBUG_URL: 'URL for development',
-  JAMBABOT_PROD_URL: 'URL for production',
+  JAMBABOT_DEBUG_URL: 'Incoming Webhook's URL for development',
+  JAMBABOT_PROD_URL: 'Incoming Webhook's URL for production',
 
-  JAMBABOT_USER_TOKEN: 'URL for userbot',
-
-  JAMBABOT_DEBUG_TOKEN: 'Token for development',
-  JAMBABOT_PROD_TOKEN: 'Token for production',
+  JAMBABOT_USER_TOKEN: 'Token for userbot integration',
 
   GOOGLE_API_KEY: 'Google API Key',
   GOOGLE_CSE_ID: 'Custom Search Engine ID',
