@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "jambabot.js",
   "dependencies": {
-    "body-parser": "^1.17.1",
+    "body-parser": "^1.17.2",
     "botkit": "^0.4.10",
-    "express": "^4.15.2",
+    "express": "^4.15.4",
     "google-images": "^1.0.0",
-    "iconv-lite": "^0.4.15",
-    "mongoose": "^4.9.5",
+    "iconv-lite": "^0.4.18",
+    "mongoose": "^4.11.6",
     "request": "^2.81.0"
   },
   "scripts": {
