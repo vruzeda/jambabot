@@ -17,7 +17,7 @@ const mongodb = require('../integrations/mongodb');
     pattern: /^add comment ([^]*)$/,
     handler: addComment,
     description: '*silviao add comment*: Adds a new comment',
-    channels: ['admin'],
+    channels: ['#admin'],
     acceptsPreFormattedText: true
   };
 })();

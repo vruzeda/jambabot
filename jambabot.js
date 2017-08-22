@@ -30,13 +30,13 @@ const variables = require('./variables');
           let channel;
 
           if (channelsInfoResponse.ok) {
-            channel = channelsInfoResponse.channel.name;
+            channel = `#${channelsInfoResponse.channel.name}`;
           } else if (groupsInfoResponse.ok) {
-            channel = groupsInfoResponse.group.name;
+            channel = `#${groupsInfoResponse.group.name}`;
           } else if (botMessage.event === 'direct_message') {
-            channel = 'allow';
+            channel = '@direct_message';
           } else {
-            channel = 'unknown';
+            channel = undefined;
           }
 
           const message = {

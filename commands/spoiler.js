@@ -20,6 +20,6 @@ const getJambaPostForDate = require('./utils/getJambaPostForDate');
     pattern: /^spoiler$/,
     handler: spoiler,
     description: '*silviao spoiler* : Replies with tomorrow\'s menu',
-    channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
+    channels: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']
   };
 })();

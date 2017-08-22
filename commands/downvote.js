@@ -27,6 +27,6 @@ const mongodb = require('../integrations/mongodb');
     pattern: /^downvote (.+)$/,
     handler: downvote,
     description: '*silviao downvote [dish name]* : Adds an downvote for the specified dish',
-    channels: ['delicias-do-jamba', 'dev-delicias-do-jamba']
+    channels: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']
   };
 })();
