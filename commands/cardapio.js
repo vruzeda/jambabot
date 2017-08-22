@@ -17,6 +17,6 @@ const getJambaPostForDate = require('./utils/getJambaPostForDate');
     pattern: /^cardapio(?: ([0-9]{1,2}\/[0-9]{1,2}))?$/,
     handler: cardapio,
     description: '*silviao cardapio [date/month]* : Replies with today\'s menu (with some mockery depending on the time it\'s executed); if a date and month where supplied, it will search for that day\'s menu',
-    channels: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']
+    channels: {'silviao': ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']}
   };
 })();

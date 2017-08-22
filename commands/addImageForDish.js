@@ -60,6 +60,6 @@ const request = require('request');
     pattern: /^add image (.*) (.*)$/,
     handler: addImageForDish,
     description: '*silviao add image [dish name] [dish image URL]* : Persists an image for the specified dish',
-    channels: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']
+    channels: {'silviao': ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']}
   };
 })();

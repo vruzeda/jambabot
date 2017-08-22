@@ -42,6 +42,7 @@ const variables = require('./variables');
           const message = {
             channel,
             userName,
+            team: botInstance.team_info.domain,
             userText: botMessage.text.replace(/\s+/g, ' ').trim(),
             preFormattedText: botMessage.text
           };

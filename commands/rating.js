@@ -27,6 +27,6 @@ const mongodb = require('../integrations/mongodb');
     pattern: /^rating (.+)$/,
     handler: rating,
     description: '*silviao rating [dish name]* : Gets the upvotes/downvotes ratings for the specified dish',
-    channels: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']
+    channels: {'silviao': ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']}
   };
 })();
