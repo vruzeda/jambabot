@@ -1,19 +1,25 @@
 (() => {
   function isValidCommand(command, message) {
-    if (!!command.channels) {
-      return isValidGlobalChannel(command, message) || isValidChannelInTeam(command, message);
+    let isValid;
+    if (command.channels) {
+      isValid = isValidGlobalChannel(command, message) || isValidChannelInTeam(command, message);
     } else {
       // Commands that don't specify channels are always available
-      return true;
+      isValid = true;
     }
+    return isValid;
   }
 
   function isValidGlobalChannel(command, message) {
-    return Array.isArray(command.channels) && (command.channels.indexOf(message.channel) >= 0);
+    isValidChannel(command.channels, message);
   }
 
   function isValidChannelInTeam(command, message) {
-    return Array.isArray(command.channels[message.team]) && (command.channels[message.team].indexOf(message.channel) >= 0);
+    isValidChannel(command.channels[message.team], message);
+  }
+
+  function isValidChannel(commandChannels, message) {
+    return Array.isArray(commandChannels) && (commandChannels.indexOf(message.channel) >= 0);
   }
 
   module.exports = isValidCommand;
