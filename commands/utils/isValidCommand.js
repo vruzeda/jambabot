@@ -11,11 +11,11 @@
   }
 
   function isValidGlobalChannel(command, message) {
-    isValidChannel(command.channels, message);
+    return isValidChannel(command.channels, message);
   }
 
   function isValidChannelInTeam(command, message) {
-    isValidChannel(command.channels[message.team], message);
+    return isValidChannel(command.channels[message.team], message);
   }
 
   function isValidChannel(commandChannels, message) {
