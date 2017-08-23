@@ -85,14 +85,14 @@ const mongodb = require('../../integrations/mongodb');
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     if (date.getTime() < today.getTime()) {
-      post.header = '*TOO LATE!* :marco:\n\n';
+      post.header = '*TOO LATE!* :silviao-ri:\n\n';
     } else if (date.getTime() >= tomorrow.getTime()) {
-      post.header = '*SPOILER* :junim: \n\n';
+      post.header = '*SPOILER* :silviao-ri:\n\n';
     } else {
       if (today.getHours() >= 10 && today.getHours() < 11) {
         post.header = '*AINDA NÃO PEDIU?*\n\n';
       } else if (today.getHours() >= 11) {
-        post.header = '*TOO LATE!* :marco:\n\n';
+        post.header = '*TOO LATE!* :silviao-ri:\n\n';
       }
 
       post.footer = '\n\n<https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|Pedir>';
