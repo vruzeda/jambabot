@@ -7,13 +7,11 @@ const mongoose = require('mongoose');
   const Dish = mongoose.model('Dish', DishSchema);
 
   function isValidDish(dish, callback) {
-    Dish.findOne({ dish: dish.toLowerCase() }, (error, storedDish) => {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
-
+    Dish.findOne({ dish: dish.toLowerCase() })
+    .then((storedDish) => {
       callback(null, !!storedDish);
+    }, (error) => {
+      callback(error, undefined);
     });
   }
 
@@ -32,7 +30,11 @@ const mongoose = require('mongoose');
         }
 
         if (!isAValidDish) {
-          Dish.create({ dish: dish.toLowerCase() }, (errorCreatingDish) => {
+          Dish.create({ dish: dish.toLowerCase() })
+          .then(() => {
+            errors.push(null);
+            recursivelySaveDishes(dishes, index + 1, errors, callback);
+          }, (errorCreatingDish) => {
             errors.push(errorCreatingDish);
             recursivelySaveDishes(dishes, index + 1, errors, callback);
           });

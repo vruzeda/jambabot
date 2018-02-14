@@ -12,12 +12,8 @@ const mongoose = require('mongoose');
   function findJambaForDate(date, callback) {
     const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
-    Jamba.findOne({ formattedDate }, (error, jamba) => {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
-
+    Jamba.findOne({ formattedDate })
+    .then((jamba) => {
       if (!jamba) {
         callback(null, undefined);
       } else {
@@ -27,6 +23,8 @@ const mongoose = require('mongoose');
           salads: jamba.salads
         });
       }
+    }, (error) => {
+      callback(error, undefined);
     });
   }
 
@@ -46,7 +44,11 @@ const mongoose = require('mongoose');
         }
       };
 
-      Jamba.update({ formattedDate }, jambaComponents, { upsert: true }, (error) => {
+      Jamba.update({ formattedDate }, jambaComponents, { upsert: true })
+      .then(() => {
+        errors.push(null);
+        recursivelySaveJambas(jambas, index + 1, errors, callback);
+      }, (error) => {
         errors.push(error);
         recursivelySaveJambas(jambas, index + 1, errors, callback);
       });
