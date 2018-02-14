@@ -7,24 +7,25 @@ const mongoose = require('mongoose');
   const SilvioComment = mongoose.model('SilvioComment', SilvioCommentSchema);
 
   function getRandomSilvioComment(callback) {
-    SilvioComment.aggregate({ $sample: { size: 1 } }, (error, silvioComments) => {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
-
+    SilvioComment.aggregate({ $sample: { size: 1 } })
+    .then((silvioComments) => {
       if (silvioComments.length === 0) {
         callback(new Error('No comments available.'), undefined);
         return;
       }
 
       callback(null, silvioComments[0].comment);
+    }, (error) => {
+      callback(error, undefined);
     });
   }
 
   function addSilvioComment(comment, callback) {
     const silvioComment = new SilvioComment({ comment });
-    silvioComment.save((error) => {
+    silvioComment.save()
+    .then(() => {
+      callback(null);
+    }, (error) => {
       callback(error);
     });
   }

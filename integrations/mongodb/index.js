@@ -8,7 +8,7 @@ const variables = require('../../variables');
 
 (() => {
   mongoose.Promise = global.Promise;
-  mongoose.connect(variables.MONGO_CONNECTION_STR);
+  mongoose.connect(variables.MONGO_CONNECTION_STR, { useMongoClient: true });
 
 
   module.exports = {

@@ -14,18 +14,16 @@ const mongoose = require('mongoose');
   function findUserDishRating(userName, dish, callback) {
     const filter = { userName: userName.toLowerCase(), dish: dish.toLowerCase() };
 
-    DishRating.findOne(filter, (error, dishRating) => {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
-
+    DishRating.findOne(filter)
+    .then((dishRating) => {
       if (!dishRating) {
         callback(new Error(`Couldn't find ${userName}'s rating for ${dish}`), undefined);
         return;
       }
 
       callback(null, dishRating);
+    }, (error) => {
+      callback(error, undefined);
     });
   }
 
@@ -43,7 +41,10 @@ const mongoose = require('mongoose');
       validDishRating.upvotes = 1;
       validDishRating.downvotes = 0;
 
-      validDishRating.save((errorSavingDishRating) => {
+      validDishRating.save()
+      .then(() => {
+        callback(null);
+      }, (errorSavingDishRating) => {
         callback(errorSavingDishRating);
       });
     });
@@ -63,7 +64,10 @@ const mongoose = require('mongoose');
       validDishRating.upvotes = 0;
       validDishRating.downvotes = 1;
 
-      validDishRating.save((errorSavingDishRating) => {
+      validDishRating.save()
+      .then(() => {
+        callback(null);
+      }, (errorSavingDishRating) => {
         callback(errorSavingDishRating);
       });
     });
@@ -82,12 +86,8 @@ const mongoose = require('mongoose');
       downvotes: { $sum: '$downvotes' }
     };
 
-    DishRating.aggregate([query, { $group: grouping }]).exec((error, aggregatedDishRatings) => {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
-
+    DishRating.aggregate([query, { $group: grouping }]).exec()
+    .then((aggregatedDishRatings) => {
       if (aggregatedDishRatings.length === 0) {
         callback(new Error(`Couldn't find ratings for ${dish}`), undefined);
         return;
@@ -97,6 +97,8 @@ const mongoose = require('mongoose');
         upvotes: aggregatedDishRatings[0].upvotes,
         downvotes: aggregatedDishRatings[0].downvotes
       });
+    }, (error) => {
+      callback(error, undefined);
     });
   }
 
