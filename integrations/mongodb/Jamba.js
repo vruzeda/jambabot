@@ -13,19 +13,19 @@ const mongoose = require('mongoose');
     const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
     Jamba.findOne({ formattedDate })
-    .then((jamba) => {
-      if (!jamba) {
-        callback(null, undefined);
-      } else {
-        callback(null, {
-          mainDishes: jamba.mainDishes,
-          garnishes: jamba.garnishes,
-          salads: jamba.salads
-        });
-      }
-    }, (error) => {
-      callback(error, undefined);
-    });
+      .then((jamba) => {
+        if (!jamba) {
+          callback(null, undefined);
+        } else {
+          callback(null, {
+            mainDishes: jamba.mainDishes,
+            garnishes: jamba.garnishes,
+            salads: jamba.salads
+          });
+        }
+      }, (error) => {
+        callback(error, undefined);
+      });
   }
 
   function saveJambas(jambas, callback) {
@@ -45,13 +45,13 @@ const mongoose = require('mongoose');
       };
 
       Jamba.update({ formattedDate }, jambaComponents, { upsert: true })
-      .then(() => {
-        errors.push(null);
-        recursivelySaveJambas(jambas, index + 1, errors, callback);
-      }, (error) => {
-        errors.push(error);
-        recursivelySaveJambas(jambas, index + 1, errors, callback);
-      });
+        .then(() => {
+          errors.push(null);
+          recursivelySaveJambas(jambas, index + 1, errors, callback);
+        }, (error) => {
+          errors.push(error);
+          recursivelySaveJambas(jambas, index + 1, errors, callback);
+        });
     } else {
       callback(errors);
     }

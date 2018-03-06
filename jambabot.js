@@ -20,7 +20,7 @@ const variables = require('./variables');
   });
 
   slack.controller.hears('.*', ['direct_message', 'direct_mention', 'mention'], (botInstance, botMessage) => {
-    const api = botInstance.api;
+    const { api } = botInstance;
 
     api.users.info({ user: botMessage.user }, (error, usersInfoResponse) => {
       const userName = usersInfoResponse.user.name;
@@ -33,7 +33,7 @@ const variables = require('./variables');
             channel = `#${channelsInfoResponse.channel.name}`;
           } else if (groupsInfoResponse.ok) {
             channel = `#${groupsInfoResponse.group.name}`;
-          } else if (botMessage.event === 'direct_message') {
+          } else if (botMessage.type === 'direct_message') {
             channel = '@direct_message';
           } else {
             channel = undefined;

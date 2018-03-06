@@ -8,11 +8,11 @@ const mongoose = require('mongoose');
 
   function isValidDish(dish, callback) {
     Dish.findOne({ dish: dish.toLowerCase() })
-    .then((storedDish) => {
-      callback(null, !!storedDish);
-    }, (error) => {
-      callback(error, undefined);
-    });
+      .then((storedDish) => {
+        callback(null, !!storedDish);
+      }, (error) => {
+        callback(error, undefined);
+      });
   }
 
   function saveDishes(dishes, callback) {
@@ -31,13 +31,13 @@ const mongoose = require('mongoose');
 
         if (!isAValidDish) {
           Dish.create({ dish: dish.toLowerCase() })
-          .then(() => {
-            errors.push(null);
-            recursivelySaveDishes(dishes, index + 1, errors, callback);
-          }, (errorCreatingDish) => {
-            errors.push(errorCreatingDish);
-            recursivelySaveDishes(dishes, index + 1, errors, callback);
-          });
+            .then(() => {
+              errors.push(null);
+              recursivelySaveDishes(dishes, index + 1, errors, callback);
+            }, (errorCreatingDish) => {
+              errors.push(errorCreatingDish);
+              recursivelySaveDishes(dishes, index + 1, errors, callback);
+            });
         } else {
           errors.push(null);
           recursivelySaveDishes(dishes, index + 1, errors, callback);

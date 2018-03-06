@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const postToSlack = require('./integrations/incomingWebhook').postToSlack;
+const { postToSlack } = require('./integrations/incomingWebhook');
 
 const jambaTime = new Date();
 jambaTime.setHours(11);

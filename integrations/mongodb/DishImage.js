@@ -10,16 +10,16 @@ const mongoose = require('mongoose');
 
   function findDishImage(dish, callback) {
     DishImage.findOne({ dish: dish.toLowerCase() })
-    .then((storedDishImage) => {
-      if (!storedDishImage) {
-        callback(new Error(`Couldn't find an image for ${dish}`), undefined);
-        return;
-      }
+      .then((storedDishImage) => {
+        if (!storedDishImage) {
+          callback(new Error(`Couldn't find an image for ${dish}`), undefined);
+          return;
+        }
 
-      callback(null, storedDishImage);
-    }, (error) => {
-      callback(error, undefined);
-    });
+        callback(null, storedDishImage);
+      }, (error) => {
+        callback(error, undefined);
+      });
   }
 
   function getImageForDish(dish, callback) {
@@ -44,11 +44,11 @@ const mongoose = require('mongoose');
       }
 
       validDishImage.save()
-      .then(() => {
-        callback(null);
-      }, (errorSavingDishImage) => {
-        callback(errorSavingDishImage);
-      });
+        .then(() => {
+          callback(null);
+        }, (errorSavingDishImage) => {
+          callback(errorSavingDishImage);
+        });
     });
   }
 

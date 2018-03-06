@@ -1,19 +1,25 @@
 const variables = require('../variables');
-const googleImages = require('google-images');
+const GoogleImages = require('google-images');
 
 (() => {
+  var googleImagesClient = undefined;
+
   function getRandomImage(query, callback) {
-    if (!variables.GOOGLE_CSE_ID) {
-      callback(new Error('GOOGLE_CSE_ID is not defined in variables.js'), undefined);
-      return;
+    if (!googleImagesClient) {
+      if (!variables.GOOGLE_CSE_ID) {
+        callback(new Error('GOOGLE_CSE_ID is not defined in variables.js'), undefined);
+        return;
+      }
+
+      if (!variables.GOOGLE_API_KEY) {
+        callback(new Error('GOOGLE_API_KEY is not defined in variables.js'), undefined);
+        return;
+      }
+
+      googleImagesClient = new GoogleImages(variables.GOOGLE_CSE_ID, variables.GOOGLE_API_KEY);
     }
 
-    if (!variables.GOOGLE_API_KEY) {
-      callback(new Error('GOOGLE_API_KEY is not defined in variables.js'), undefined);
-      return;
-    }
-
-    googleImages(variables.GOOGLE_CSE_ID, variables.GOOGLE_API_KEY).search(query).then((images) => {
+    googleImagesClient.search(query).then((images) => {
       const resultsLength = images.length;
 
       if (resultsLength > 0) {

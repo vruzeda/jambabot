@@ -15,16 +15,16 @@ const mongoose = require('mongoose');
     const filter = { userName: userName.toLowerCase(), dish: dish.toLowerCase() };
 
     DishRating.findOne(filter)
-    .then((dishRating) => {
-      if (!dishRating) {
-        callback(new Error(`Couldn't find ${userName}'s rating for ${dish}`), undefined);
-        return;
-      }
+      .then((dishRating) => {
+        if (!dishRating) {
+          callback(new Error(`Couldn't find ${userName}'s rating for ${dish}`), undefined);
+          return;
+        }
 
-      callback(null, dishRating);
-    }, (error) => {
-      callback(error, undefined);
-    });
+        callback(null, dishRating);
+      }, (error) => {
+        callback(error, undefined);
+      });
   }
 
   function upvoteDish(userName, dish, callback) {
@@ -42,11 +42,11 @@ const mongoose = require('mongoose');
       validDishRating.downvotes = 0;
 
       validDishRating.save()
-      .then(() => {
-        callback(null);
-      }, (errorSavingDishRating) => {
-        callback(errorSavingDishRating);
-      });
+        .then(() => {
+          callback(null);
+        }, (errorSavingDishRating) => {
+          callback(errorSavingDishRating);
+        });
     });
   }
 
@@ -65,11 +65,11 @@ const mongoose = require('mongoose');
       validDishRating.downvotes = 1;
 
       validDishRating.save()
-      .then(() => {
-        callback(null);
-      }, (errorSavingDishRating) => {
-        callback(errorSavingDishRating);
-      });
+        .then(() => {
+          callback(null);
+        }, (errorSavingDishRating) => {
+          callback(errorSavingDishRating);
+        });
     });
   }
 
@@ -87,19 +87,19 @@ const mongoose = require('mongoose');
     };
 
     DishRating.aggregate([query, { $group: grouping }]).exec()
-    .then((aggregatedDishRatings) => {
-      if (aggregatedDishRatings.length === 0) {
-        callback(new Error(`Couldn't find ratings for ${dish}`), undefined);
-        return;
-      }
+      .then((aggregatedDishRatings) => {
+        if (aggregatedDishRatings.length === 0) {
+          callback(new Error(`Couldn't find ratings for ${dish}`), undefined);
+          return;
+        }
 
-      callback(null, {
-        upvotes: aggregatedDishRatings[0].upvotes,
-        downvotes: aggregatedDishRatings[0].downvotes
+        callback(null, {
+          upvotes: aggregatedDishRatings[0].upvotes,
+          downvotes: aggregatedDishRatings[0].downvotes
+        });
+      }, (error) => {
+        callback(error, undefined);
       });
-    }, (error) => {
-      callback(error, undefined);
-    });
   }
 
   module.exports = {

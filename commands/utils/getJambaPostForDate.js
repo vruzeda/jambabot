@@ -17,13 +17,13 @@ const mongodb = require('../../integrations/mongodb');
       // Check if the date is in the current month (and year, just for safety)
       const today = new Date();
       if (date.getMonth() !== today.getMonth() || date.getFullYear() !== today.getFullYear()) {
-        reject(`O cardápio para ${date.getDate()}/${date.getMonth() + 1} não está disponível!`);
+        reject(new Error(`O cardápio para ${date.getDate()}/${date.getMonth() + 1} não está disponível!`));
         return;
       }
 
       // Check if the date is a sunday
       if (date.getDay() === 0) {
-        reject('O Jambalaya não abre de domingos!');
+        reject(new Error('O Jambalaya não abre de domingos!'));
         return;
       }
 
@@ -36,15 +36,15 @@ const mongodb = require('../../integrations/mongodb');
     return new Promise((resolve, reject) => {
       jambalaya.getJambaForDate(date, (error, jamba) => {
         if (error) {
-          reject('O site do Jamba está fora do ar :cry:\n' +
+          reject(new Error('O site do Jamba está fora do ar :cry:\n' +
             'Dá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\n' +
             'Ou liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\n(Ou <#C0HNHSCP9>, ' +
-            'fazer o quê :stuck_out_tongue_winking_eye:)');
+            'fazer o quê :stuck_out_tongue_winking_eye:)'));
           return;
         }
 
         if (!jamba) {
-          reject(`O cardápio para ${date.getDate()}/${date.getMonth() + 1} não está disponível!`);
+          reject(new Error(`O cardápio para ${date.getDate()}/${date.getMonth() + 1} não está disponível!`));
           return;
         }
 
