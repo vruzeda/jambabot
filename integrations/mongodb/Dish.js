@@ -6,46 +6,24 @@ const mongoose = require('mongoose');
   });
   const Dish = mongoose.model('Dish', DishSchema);
 
-  function isValidDish(dish, callback) {
-    Dish.findOne({ dish: dish.toLowerCase() })
-      .then((storedDish) => {
-        callback(null, !!storedDish);
-      }, (error) => {
-        callback(error, undefined);
-      });
+  function isValidDish(dish) {
+    return Dish.findOne({ dish: dish.toLowerCase() })
+      .then(storedDish => !!storedDish);
   }
 
-  function saveDishes(dishes, callback) {
-    recursivelySaveDishes(dishes, 0, [], callback);
+  function saveDishes(dishes) {
+    return Promise.all(dishes.map(saveDish));
   }
 
-  function recursivelySaveDishes(dishes, index, errors, callback) {
-    if (index < dishes.length) {
-      const dish = dishes[index];
-      isValidDish(dish, (error, isAValidDish) => {
-        if (error) {
-          errors.push(error);
-          recursivelySaveDishes(dishes, index + 1, errors, callback);
-          return;
+  function saveDish(dish) {
+    return isValidDish(dish)
+      .then((isAValidDish) => {
+        if (isAValidDish) {
+          return Promise.resolve(null);
         }
 
-        if (!isAValidDish) {
-          Dish.create({ dish: dish.toLowerCase() })
-            .then(() => {
-              errors.push(null);
-              recursivelySaveDishes(dishes, index + 1, errors, callback);
-            }, (errorCreatingDish) => {
-              errors.push(errorCreatingDish);
-              recursivelySaveDishes(dishes, index + 1, errors, callback);
-            });
-        } else {
-          errors.push(null);
-          recursivelySaveDishes(dishes, index + 1, errors, callback);
-        }
+        return Dish.create({ dish: dish.toLowerCase() });
       });
-    } else {
-      callback(errors);
-    }
   }
 
   module.exports = {

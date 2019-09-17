@@ -2,15 +2,14 @@ const mongodb = require('../integrations/mongodb');
 
 (() => {
   function addComment(message, callback, comment) {
-    mongodb.addSilvioComment(comment, (error) => {
-      if (error) {
+    mongodb.addSilvioComment(comment)
+      .then(() => {
+        callback('Show');
+      })
+      .catch((error) => {
         console.log(error);
         callback('Não entendi nada....');
-        return;
-      }
-
-      callback('Show');
-    });
+      });
   }
 
   module.exports = {

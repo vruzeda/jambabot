@@ -2,14 +2,11 @@ const mongodb = require('../integrations/mongodb');
 
 (() => {
   function comenta(message, callback) {
-    mongodb.getRandomSilvioComment((error, comment) => {
-      if (error) {
+    mongodb.getRandomSilvioComment()
+      .then(callback)
+      .catch(() => {
         callback('Vixxxxxxxi...');
-        return;
-      }
-
-      callback(comment);
-    });
+      });
   }
 
   module.exports = {

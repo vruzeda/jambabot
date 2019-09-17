@@ -11,7 +11,6 @@ const mongodb = require('../../integrations/mongodb');
       .catch(callback);
   }
 
-
   function checkValidDate(date) {
     return new Promise((resolve, reject) => {
       // Check if the date is in the current month (and year, just for safety)
@@ -30,7 +29,6 @@ const mongodb = require('../../integrations/mongodb');
       resolve(true);
     });
   }
-
 
   function getJambaForDate(date) {
     return new Promise((resolve, reject) => {
@@ -53,7 +51,6 @@ const mongodb = require('../../integrations/mongodb');
     });
   }
 
-
   function generatePostText(date, jamba) {
     return new Promise((resolve) => {
       const post = {
@@ -65,7 +62,7 @@ const mongodb = require('../../integrations/mongodb');
       generatePostHeaderAndFooter(date, post);
 
       getImageForMainDishes(jamba.mainDishes, (mainDishesImages) => {
-        getRatingsForMainDishes(jamba.mainDishes, (mainDishesRatings) => {
+        getRatingsForMainDishes(jamba.mainDishes).then((mainDishesRatings) => {
           generatePostBody(post, jamba, mainDishesImages, mainDishesRatings);
 
           resolve(post.header + post.body.join('\n') + post.footer);
@@ -73,7 +70,6 @@ const mongodb = require('../../integrations/mongodb');
       });
     });
   }
-
 
   function generatePostHeaderAndFooter(date, post) {
     const today = new Date();
@@ -99,7 +95,6 @@ const mongodb = require('../../integrations/mongodb');
     }
   }
 
-
   function generatePostBody(post, jamba, mainDishesImages, mainDishesRatings) {
     if (jamba.mainDishes.length > 0) {
       post.body.push('Pratos principais: ');
@@ -123,7 +118,6 @@ const mongodb = require('../../integrations/mongodb');
     }
   }
 
-
   function getImageForMainDishes(mainDishes, callback) {
     recursivelyGetImageForMainDishes(mainDishes, 0, [], callback);
   }
@@ -142,31 +136,33 @@ const mongodb = require('../../integrations/mongodb');
   }
 
   function getImage(query, callback) {
-    mongodb.getImageForDish(query, (error, preDefinedImage) => {
-      if (preDefinedImage) {
+    mongodb.getImageForDish(query)
+      .then((preDefinedImage) => {
+        if (!preDefinedImage) {
+          throw new Error('No predefined image');
+        }
+
         callback(null, preDefinedImage);
-        return;
-      }
-
-      googleImages.getRandomImage(query, callback);
-    });
-  }
-
-  function getRatingsForMainDishes(mainDishes, callback) {
-    recursivelyGetRatingsForMainDishes(mainDishes, 0, [], callback);
-  }
-
-  function recursivelyGetRatingsForMainDishes(mainDishes, index, ratings, callback) {
-    if (index < mainDishes.length) {
-      console.log(`Getting ratings for ${mainDishes[index]} (${index + 1} of ${mainDishes.length})`);
-
-      mongodb.getDishRating(mainDishes[index], (error, rating) => {
-        ratings.push(rating || { upvotes: 0, downvotes: 0 });
-        recursivelyGetRatingsForMainDishes(mainDishes, index + 1, ratings, callback);
+      })
+      .catch(() => {
+        googleImages.getRandomImage(query, callback);
       });
-    } else {
-      callback(ratings);
-    }
+  }
+
+  function getRatingsForMainDishes(mainDishes) {
+    return Promise.all(mainDishes.map(getRatingsForMainDish));
+  }
+
+  function getRatingsForMainDish(mainDish) {
+    return mongodb.getDishRating(mainDish)
+      .then((rating) => {
+        if (!rating) {
+          throw new Error(`No rating for dish ${mainDish}`);
+        }
+
+        return rating;
+      })
+      .catch(() => ({ upvotes: 0, downvotes: 0 }));
   }
 
   module.exports = getJambaPostForDate;

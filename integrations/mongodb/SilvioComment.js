@@ -6,28 +6,20 @@ const mongoose = require('mongoose');
   });
   const SilvioComment = mongoose.model('SilvioComment', SilvioCommentSchema);
 
-  function getRandomSilvioComment(callback) {
-    SilvioComment.aggregate([{ $sample: { size: 1 } }])
+  function getRandomSilvioComment() {
+    return SilvioComment.aggregate([{ $sample: { size: 1 } }])
       .then((silvioComments) => {
         if (silvioComments.length === 0) {
-          callback(new Error('No comments available.'), undefined);
-          return;
+          throw new Error('No comments available.');
         }
 
-        callback(null, silvioComments[0].comment);
-      }, (error) => {
-        callback(error, undefined);
+        return silvioComments[0].comment;
       });
   }
 
-  function addSilvioComment(comment, callback) {
+  function addSilvioComment(comment) {
     const silvioComment = new SilvioComment({ comment });
-    silvioComment.save()
-      .then(() => {
-        callback(null);
-      }, (error) => {
-        callback(error);
-      });
+    return silvioComment.save();
   }
 
   module.exports = {

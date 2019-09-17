@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 (() => {
   const DishImageSchema = mongoose.Schema({
     dish: { type: String, unique: true },
@@ -8,48 +7,30 @@ const mongoose = require('mongoose');
   });
   const DishImage = mongoose.model('DishImage', DishImageSchema);
 
-  function findDishImage(dish, callback) {
-    DishImage.findOne({ dish: dish.toLowerCase() })
+  function findDishImage(dish) {
+    return DishImage.findOne({ dish: dish.toLowerCase() })
       .then((storedDishImage) => {
         if (!storedDishImage) {
-          callback(new Error(`Couldn't find an image for ${dish}`), undefined);
-          return;
+          throw new Error(`Couldn't find an image for ${dish}`);
         }
 
-        callback(null, storedDishImage);
-      }, (error) => {
-        callback(error, undefined);
+        return storedDishImage;
       });
   }
 
-  function getImageForDish(dish, callback) {
-    findDishImage(dish, (error, dishImage) => {
-      if (error) {
-        callback(error, undefined);
-        return;
-      }
-
-      callback(null, dishImage.image);
-    });
+  function getImageForDish(dish) {
+    return findDishImage(dish)
+      .then(dishImage => dishImage.image);
   }
 
-  function addImageForDish(dish, image, callback) {
-    findDishImage(dish, (error, storedDishImage) => {
-      let validDishImage = storedDishImage;
-
-      if (validDishImage) {
-        validDishImage.image = image;
-      } else {
-        validDishImage = new DishImage({ dish: dish.toLowerCase(), image });
-      }
-
-      validDishImage.save()
-        .then(() => {
-          callback(null);
-        }, (errorSavingDishImage) => {
-          callback(errorSavingDishImage);
-        });
-    });
+  function addImageForDish(dish, image) {
+    return findDishImage(dish)
+      .then((storedDishImage) => {
+        storedDishImage.image = image;
+        return storedDishImage;
+      })
+      .catch(() => new DishImage({ dish: dish.toLowerCase(), image }))
+      .then(dishImage => dishImage.save());
   }
 
   module.exports = {

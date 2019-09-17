@@ -11,69 +11,48 @@ const mongoose = require('mongoose');
 
   const DishRating = mongoose.model('DishRating', DishRatingSchema);
 
-  function findUserDishRating(userName, dish, callback) {
+  function findUserDishRating(userName, dish) {
     const filter = { userName: userName.toLowerCase(), dish: dish.toLowerCase() };
 
-    DishRating.findOne(filter)
+    return DishRating.findOne(filter)
       .then((dishRating) => {
         if (!dishRating) {
-          callback(new Error(`Couldn't find ${userName}'s rating for ${dish}`), undefined);
-          return;
+          throw new Error(`Couldn't find ${userName}'s rating for ${dish}`);
         }
 
-        callback(null, dishRating);
-      }, (error) => {
-        callback(error, undefined);
+        return dishRating;
       });
   }
 
-  function upvoteDish(userName, dish, callback) {
-    findUserDishRating(userName, dish, (errorFindindDishRating, storedDishRating) => {
-      let validDishRating = storedDishRating;
-
-      if (!validDishRating) {
-        validDishRating = new DishRating({
-          dish: dish.toLowerCase(),
-          userName: userName.toLowerCase()
-        });
-      }
-
-      validDishRating.upvotes = 1;
-      validDishRating.downvotes = 0;
-
-      validDishRating.save()
-        .then(() => {
-          callback(null);
-        }, (errorSavingDishRating) => {
-          callback(errorSavingDishRating);
-        });
-    });
+  function upvoteDish(userName, dish) {
+    return findUserDishRating(userName, dish)
+      .then((storedDishRating) => {
+        storedDishRating.upvotes = 1;
+        storedDishRating.downvotes = 0;
+        return storedDishRating;
+      })
+      .catch(() => new DishRating({
+        dish: dish.toLowerCase(),
+        userName: userName.toLowerCase()
+      }))
+      .then(dishRating => dishRating.save());
   }
 
-  function downvoteDish(userName, dish, callback) {
-    findUserDishRating(userName, dish, (errorFindingUserDishRating, storedDishRating) => {
-      let validDishRating = storedDishRating;
-
-      if (!validDishRating) {
-        validDishRating = new DishRating({
-          dish: dish.toLowerCase(),
-          userName: userName.toLowerCase()
-        });
-      }
-
-      validDishRating.upvotes = 0;
-      validDishRating.downvotes = 1;
-
-      validDishRating.save()
-        .then(() => {
-          callback(null);
-        }, (errorSavingDishRating) => {
-          callback(errorSavingDishRating);
-        });
-    });
+  function downvoteDish(userName, dish) {
+    return findUserDishRating(userName, dish)
+      .then((storedDishRating) => {
+        storedDishRating.upvotes = 0;
+        storedDishRating.downvotes = 1;
+        return storedDishRating;
+      })
+      .catch(() => new DishRating({
+        dish: dish.toLowerCase(),
+        userName: userName.toLowerCase()
+      }))
+      .then(dishRating => dishRating.save());
   }
 
-  function getDishRating(dish, callback) {
+  function getDishRating(dish) {
     const query = {
       $match: {
         dish: dish.toLowerCase()
@@ -86,19 +65,16 @@ const mongoose = require('mongoose');
       downvotes: { $sum: '$downvotes' }
     };
 
-    DishRating.aggregate([query, { $group: grouping }]).exec()
+    return DishRating.aggregate([query, { $group: grouping }]).exec()
       .then((aggregatedDishRatings) => {
         if (aggregatedDishRatings.length === 0) {
-          callback(new Error(`Couldn't find ratings for ${dish}`), undefined);
-          return;
+          throw new Error(`Couldn't find ratings for ${dish}`);
         }
 
-        callback(null, {
+        return {
           upvotes: aggregatedDishRatings[0].upvotes,
           downvotes: aggregatedDishRatings[0].downvotes
-        });
-      }, (error) => {
-        callback(error, undefined);
+        };
       });
   }
 
