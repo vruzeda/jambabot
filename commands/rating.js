@@ -1,8 +1,8 @@
 const mongodb = require('../integrations/mongodb');
 
 (() => {
-  function rating(message, callback, dish) {
-    mongodb.isValidDish(dish)
+  function rating(_message, dish) {
+    return mongodb.isValidDish(dish)
       .catch(() => {
         throw new Error('Não entendi nada....');
       })
@@ -16,12 +16,8 @@ const mongodb = require('../integrations/mongodb');
             throw new Error('Não sei de nada....\nMais é show....');
           });
       })
-      .then((storedDishRating) => {
-        callback(`Hummm....\n:arrow_up_small: ${storedDishRating.upvotes} :arrow_down_small: ${storedDishRating.downvotes}`);
-      })
-      .catch((error) => {
-        callback(error.message);
-      });
+      .then(storedDishRating => `Hummm....\n:arrow_up_small: ${storedDishRating.upvotes} :arrow_down_small: ${storedDishRating.downvotes}`)
+      .catch(error => error.message);
   }
 
   module.exports = {

@@ -35,8 +35,8 @@ const request = require('request');
     });
   }
 
-  function addImageForDish(message, callback, dishName, dishImageUrl) {
-    mongodb.isValidDish(dishName)
+  function addImageForDish(_message, dishName, dishImageUrl) {
+    return mongodb.isValidDish(dishName)
       .catch(() => {
         throw new Error('Não entendi nada....');
       })
@@ -52,12 +52,8 @@ const request = require('request');
             throw new Error('Vixxxxxxi c lascou kkkkk');
           });
       })
-      .then(() => {
-        callback('Acho q ficou bom');
-      })
-      .catch((error) => {
-        callback(error.message);
-      });
+      .then(() => 'Acho q ficou bom')
+      .catch(error => error.message);
   }
 
   module.exports = {

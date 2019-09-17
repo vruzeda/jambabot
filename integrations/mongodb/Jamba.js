@@ -40,7 +40,16 @@ const mongoose = require('mongoose');
       }
     };
 
-    return Jamba.update({ formattedDate }, jambaComponents, { upsert: true });
+    return new Promise((resolve, reject) => {
+      Jamba.updateMany({ formattedDate }, jambaComponents, { upsert: true }, (error) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(true);
+      });
+    });
   }
 
   module.exports = {

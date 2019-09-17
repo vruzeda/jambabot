@@ -4,8 +4,8 @@ const iconvlite = require('iconv-lite');
 const mongodb = require('./mongodb');
 
 (() => {
-  function getJambaForDate(date, callback) {
-    mongodb.findJambaForDate(date)
+  function getJambaForDate(date) {
+    return mongodb.findJambaForDate(date)
       .then((storedJambaForDate) => {
         if (storedJambaForDate) {
           return storedJambaForDate;
@@ -16,26 +16,15 @@ const mongodb = require('./mongodb');
           throw new Error(`The jamba for ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} is unavailable!`);
         }
 
-        return updateJambasFromSite((errorUpdatingFromSite) => {
-          if (errorUpdatingFromSite) {
-            throw errorUpdatingFromSite;
-          }
+        return updateJambasFromSite()
+          .then(() => mongodb.findJambaForDate(date))
+          .then((jamba) => {
+            if (!jamba) {
+              throw new Error(`The jamba for ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} is unavailable!`);
+            }
 
-          return mongodb.findJambaForDate(date)
-            .then((jamba) => {
-              if (!jamba) {
-                throw new Error(`The jamba for ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} is unavailable!`);
-              }
-
-              return jamba;
-            });
-        });
-      })
-      .then((jambaForDate) => {
-        callback(null, jambaForDate);
-      })
-      .catch((error) => {
-        callback(error, undefined);
+            return jamba;
+          });
       });
   }
 
@@ -47,12 +36,10 @@ const mongodb = require('./mongodb');
           .catch(() => {
             throw new Error('Couldn\'t save all dishes from site.');
           })
-          .then(() => {
-            mongodb.saveJambas(jambas)
-              .catch(() => {
-                throw new Error('Couldn\'t save all jambas from site.');
-              });
-          });
+          .then(() => mongodb.saveJambas(jambas)
+            .catch(() => {
+              throw new Error('Couldn\'t save all jambas from site.');
+            }));
       });
   }
 

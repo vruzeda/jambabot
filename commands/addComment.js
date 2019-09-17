@@ -1,14 +1,12 @@
 const mongodb = require('../integrations/mongodb');
 
 (() => {
-  function addComment(message, callback, comment) {
-    mongodb.addSilvioComment(comment)
-      .then(() => {
-        callback('Show');
-      })
+  function addComment(_message, comment) {
+    return mongodb.addSilvioComment(comment)
+      .then(() => 'Show')
       .catch((error) => {
         console.log(error);
-        callback('Não entendi nada....');
+        return 'Não entendi nada....';
       });
   }
 

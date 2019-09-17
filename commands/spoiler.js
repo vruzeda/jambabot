@@ -1,7 +1,7 @@
 const getJambaPostForDate = require('./utils/getJambaPostForDate');
 
 (() => {
-  function spoiler(message, callback) {
+  function spoiler() {
     const date = new Date();
     date.setDate(date.getDate() + 1);
 
@@ -13,13 +13,13 @@ const getJambaPostForDate = require('./utils/getJambaPostForDate');
       date.setDate(date.getDate() + 2);
     }
 
-    getJambaPostForDate(date, callback);
+    return getJambaPostForDate(date);
   }
 
   module.exports = {
     pattern: /^spoiler$/,
     handler: spoiler,
     description: '*silviao spoiler* : Replies with tomorrow\'s menu',
-    channels: {'silviao': ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message']}
+    channels: { silviao: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message'] }
   };
 })();

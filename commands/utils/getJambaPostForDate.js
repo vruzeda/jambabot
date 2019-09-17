@@ -3,12 +3,10 @@ const jambalaya = require('../../integrations/jambalaya');
 const mongodb = require('../../integrations/mongodb');
 
 (() => {
-  function getJambaPostForDate(date, callback) {
-    checkValidDate(date)
+  function getJambaPostForDate(date) {
+    return checkValidDate(date)
       .then(() => getJambaForDate(date))
-      .then(jamba => generatePostText(date, jamba))
-      .then(callback)
-      .catch(callback);
+      .then(jamba => generatePostText(date, jamba));
   }
 
   function checkValidDate(date) {
@@ -31,47 +29,62 @@ const mongodb = require('../../integrations/mongodb');
   }
 
   function getJambaForDate(date) {
-    return new Promise((resolve, reject) => {
-      jambalaya.getJambaForDate(date, (error, jamba) => {
-        if (error) {
-          reject(new Error('O site do Jamba está fora do ar :cry:\n' +
-            'Dá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\n' +
-            'Ou liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\n(Ou <#C0HNHSCP9>, ' +
-            'fazer o quê :stuck_out_tongue_winking_eye:)'));
-          return;
-        }
-
+    return jambalaya.getJambaForDate(date)
+      .catch(() => {
+        throw new Error('O site do Jamba está fora do ar :cry:\n' +
+          'Dá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\n' +
+          'Ou liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\n(Ou <#C0HNHSCP9>, ' +
+          'fazer o quê :stuck_out_tongue_winking_eye:)');
+      })
+      .then((jamba) => {
         if (!jamba) {
-          reject(new Error(`O cardápio para ${date.getDate()}/${date.getMonth() + 1} não está disponível!`));
-          return;
+          throw new Error(`O cardápio para ${date.getDate()}/${date.getMonth() + 1} não está disponível!`);
         }
 
-        resolve(jamba);
+        return jamba;
       });
-    });
   }
 
   function generatePostText(date, jamba) {
-    return new Promise((resolve) => {
-      const post = {
-        header: '',
-        body: [],
-        footer: ''
-      };
+    return Promise.all([
+      getImageForMainDishes(jamba.mainDishes),
+      getRatingsForMainDishes(jamba.mainDishes),
+    ])
+      .then(([mainDishesImages, mainDishesRatings]) => {
+        const post = {
+          header: generatePostHeader(date),
+          body: generatePostBody(jamba, mainDishesImages, mainDishesRatings),
+          footer: generatePostFooter(date),
+        };
 
-      generatePostHeaderAndFooter(date, post);
-
-      getImageForMainDishes(jamba.mainDishes, (mainDishesImages) => {
-        getRatingsForMainDishes(jamba.mainDishes).then((mainDishesRatings) => {
-          generatePostBody(post, jamba, mainDishesImages, mainDishesRatings);
-
-          resolve(post.header + post.body.join('\n') + post.footer);
-        });
+        return post.header + post.body.join('\n') + post.footer;
       });
-    });
   }
 
-  function generatePostHeaderAndFooter(date, post) {
+  function generatePostHeader(date) {
+    const today = new Date();
+    today.setMinutes(0);
+    today.setSeconds(0);
+    today.setMilliseconds(0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0);
+
+    if (date.getTime() < today.getTime()) {
+      return '*TOO LATE!* :silviao-ri:\n\n';
+    } else if (date.getTime() >= tomorrow.getTime()) {
+      return '*SPOILER* :silviao-ri:\n\n';
+    } else if (today.getHours() >= 10 && today.getHours() < 11) {
+      return '*AINDA NÃO PEDIU?*\n\n';
+    } else if (today.getHours() >= 11) {
+      return '*TOO LATE!* :silviao-ri:\n\n';
+    }
+
+    return '';
+  }
+
+  function generatePostFooter(date) {
     const today = new Date();
     today.setMinutes(0);
     today.setSeconds(0);
@@ -80,24 +93,18 @@ const mongodb = require('../../integrations/mongodb');
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    if (date.getTime() < today.getTime()) {
-      post.header = '*TOO LATE!* :silviao-ri:\n\n';
-    } else if (date.getTime() >= tomorrow.getTime()) {
-      post.header = '*SPOILER* :silviao-ri:\n\n';
-    } else {
-      if (today.getHours() >= 10 && today.getHours() < 11) {
-        post.header = '*AINDA NÃO PEDIU?*\n\n';
-      } else if (today.getHours() >= 11) {
-        post.header = '*TOO LATE!* :silviao-ri:\n\n';
-      }
-
-      post.footer = '\n\n<https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|Pedir>';
+    if ((date.getTime() >= today.getTime()) && (date.getTime() < tomorrow.getTime())) {
+      return '\n\n<https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|Pedir>';
     }
+
+    return '';
   }
 
-  function generatePostBody(post, jamba, mainDishesImages, mainDishesRatings) {
+  function generatePostBody(jamba, mainDishesImages, mainDishesRatings) {
+    const body = [];
+
     if (jamba.mainDishes.length > 0) {
-      post.body.push('Pratos principais: ');
+      body.push('Pratos principais: ');
 
       jamba.mainDishes.forEach((mainDishName, i) => {
         const image = mainDishesImages[i];
@@ -105,48 +112,35 @@ const mongodb = require('../../integrations/mongodb');
         let mainDishText = `- :arrow_up_small: ${rating.upvotes} :arrow_down_small: ${rating.downvotes} `;
         mainDishText += image ? `<${image}|${mainDishName}>` : mainDishName;
 
-        post.body.push(mainDishText);
+        body.push(mainDishText);
       });
     }
 
     if (jamba.garnishes.length > 0) {
-      post.body.push(`Guarnições: ${jamba.garnishes.join(' - ')}`);
+      body.push(`Guarnições: ${jamba.garnishes.join(' - ')}`);
     }
 
     if (jamba.salads.length > 0) {
-      post.body.push(`Saladas: ${jamba.salads.join(' - ')}`);
+      body.push(`Saladas: ${jamba.salads.join(' - ')}`);
     }
+
+    return body;
   }
 
-  function getImageForMainDishes(mainDishes, callback) {
-    recursivelyGetImageForMainDishes(mainDishes, 0, [], callback);
+  function getImageForMainDishes(mainDishes) {
+    return Promise.all(mainDishes.map(getImageForMainDish));
   }
 
-  function recursivelyGetImageForMainDishes(mainDishes, index, images, callback) {
-    if (index < mainDishes.length) {
-      console.log(`Getting image for ${mainDishes[index]} (${index + 1} of ${mainDishes.length})`);
-
-      getImage(mainDishes[index], (error, image) => {
-        images.push(image);
-        recursivelyGetImageForMainDishes(mainDishes, index + 1, images, callback);
-      });
-    } else {
-      callback(images);
-    }
-  }
-
-  function getImage(query, callback) {
-    mongodb.getImageForDish(query)
+  function getImageForMainDish(mainDish) {
+    return mongodb.getImageForDish(mainDish)
       .then((preDefinedImage) => {
         if (!preDefinedImage) {
           throw new Error('No predefined image');
         }
 
-        callback(null, preDefinedImage);
+        return preDefinedImage;
       })
-      .catch(() => {
-        googleImages.getRandomImage(query, callback);
-      });
+      .catch(() => googleImages.getRandomImage(mainDish));
   }
 
   function getRatingsForMainDishes(mainDishes) {

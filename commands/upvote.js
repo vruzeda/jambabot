@@ -1,8 +1,8 @@
 const mongodb = require('../integrations/mongodb');
 
 (() => {
-  function upvote(message, callback, dish) {
-    mongodb.isValidDish(dish)
+  function upvote(message, dish) {
+    return mongodb.isValidDish(dish)
       .catch(() => {
         throw new Error('Não entendi nada....');
       })
@@ -16,12 +16,8 @@ const mongodb = require('../integrations/mongodb');
             throw new Error('Não entendi nada....');
           });
       })
-      .then(() => {
-        callback('Show');
-      })
-      .catch((error) => {
-        callback(error.message);
-      });
+      .then(() => 'Show')
+      .catch(error => error.message);
   }
 
   module.exports = {

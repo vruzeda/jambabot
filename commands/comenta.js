@@ -1,12 +1,9 @@
 const mongodb = require('../integrations/mongodb');
 
 (() => {
-  function comenta(message, callback) {
-    mongodb.getRandomSilvioComment()
-      .then(callback)
-      .catch(() => {
-        callback('Vixxxxxxxi...');
-      });
+  function comenta() {
+    return mongodb.getRandomSilvioComment()
+      .catch(() => 'Vixxxxxxxi...');
   }
 
   module.exports = {

@@ -18,10 +18,9 @@ const isValidCommand = require('./utils/isValidCommand');
 
       if (match) {
         if (isValidCommand(command, message)) {
-          const params = [message, callback];
-          params.push(...match.slice(1));
-
-          command.handler(...params);
+          command.handler(message, ...match.slice(1))
+            .then(callback)
+            .catch(callback);
         } else {
           callback('C fude kkkkk');
         }

@@ -2,7 +2,7 @@ const isValidCommand = require('./utils/isValidCommand');
 
 (() => {
   /* eslint global-require: 0 */
-  function help(message, callback, invalidCommand) {
+  function help(message, invalidCommand) {
     let helpText;
     const commands = require('./commands');
 
@@ -18,7 +18,7 @@ const isValidCommand = require('./utils/isValidCommand');
       }
     });
 
-    callback(helpText);
+    return Promise.resolve(helpText);
   }
 
   module.exports = {
