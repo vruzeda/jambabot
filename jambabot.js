@@ -49,11 +49,12 @@ const variables = require('./variables');
 
           console.info(message);
 
-          parseCommand(message, (response) => {
-            if (response) {
-              botInstance.reply(botMessage, response);
-            }
-          });
+          parseCommand(message)
+            .then((response) => {
+              if (response) {
+                botInstance.reply(botMessage, response);
+              }
+            });
         });
       });
     });

@@ -1,35 +1,35 @@
 const isValidCommand = require('./utils/isValidCommand');
 
 (() => {
+  function matchCommand(command, message) {
+    let match;
+
+    if (command.acceptsPreFormattedText) {
+      match = message.preFormattedText.match(command.pattern);
+    }
+
+    if (!match) {
+      match = message.userText.match(command.pattern);
+    }
+
+    return match;
+  }
+
   /* eslint global-require: 0 */
-  function parseCommand(message, callback) {
+  function parseCommand(message) {
     const commands = require('./commands');
 
-    commands.some((command) => {
-      let match;
+    const matchingCommand = commands.find(command => matchCommand(command, message));
+    if (!matchingCommand) {
+      return Promise.resolve(undefined);
+    }
 
-      if (command.acceptsPreFormattedText) {
-        match = message.preFormattedText.match(command.pattern);
-      }
+    if (!isValidCommand(matchingCommand, message)) {
+      return Promise.resolve('C fude kkkkk');
+    }
 
-      if (!match) {
-        match = message.userText.match(command.pattern);
-      }
-
-      if (match) {
-        if (isValidCommand(command, message)) {
-          command.handler(message, ...match.slice(1))
-            .then(callback)
-            .catch(callback);
-        } else {
-          callback('C fude kkkkk');
-        }
-
-        return true;
-      }
-
-      return false;
-    });
+    const match = matchCommand(matchingCommand, message);
+    return matchingCommand.handler(message, ...match.slice(1));
   }
 
   module.exports = parseCommand;
