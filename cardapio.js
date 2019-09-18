@@ -6,7 +6,7 @@ const { postToSlack } = require('./integrations/incomingWebhook');
 
 const today = new Date();
 if (today.getHours() < 11) {
-  cardapio(undefined, postToSlack);
+  cardapio(undefined).then(postToSlack);
 } else {
-  spoiler(undefined, postToSlack);
+  spoiler(undefined).then(postToSlack);
 }

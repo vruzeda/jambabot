@@ -2,11 +2,6 @@
 
 const jambalaya = require('./integrations/jambalaya');
 
-jambalaya.updateJambasFromSite((error) => {
-  if (error) {
-    console.error(`Couldn't update jambas from site: ${error}`);
-    process.exit(1);
-  } else {
-    process.exit(0);
-  }
-});
+jambalaya.updateJambasFromSite()
+  .then(() => process.exit(0))
+  .catch(() => process.exit(1));
