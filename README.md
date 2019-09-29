@@ -13,11 +13,7 @@ It has the following behavior:
 - If it is executed between 11AM and 24PM, it will post the spoiler for tomorrow's menu.
 
 This script was written for run in NodeJS using JavaScript.
-To run it, you must define a file named "variables.js" with three variables defined:
-
-- JAMBABOT_DEBUG: Enables debug logs, and makes the script post to the debug channel (it should be either 'True' or 'False');
-- JAMBABOT_DEBUG_URL: The URL provided by Slack - this one is used for debug purposes (only used if JAMBABOT_DEBUG is true);
-- JAMBABOT_PROD_URL: The URL provided by Slack - this is one is used for production.
+To run it, you must define a file named "variables.js", following the stub file that you can use to guide you, "variables.js.stub".
 
 After defining the necessary variables, the script is run using:
 
@@ -30,11 +26,7 @@ It was designed to run only in the hour before that, calculating the minutes to 
 When the counter reaches 0, a GIF is also posted.
 
 This script was written for run in NodeJS using JavaScript.
-To run it, you should have 3 environment variables defined:
-
-- JAMBABOT_DEBUG: Enables debug logs, and makes the script post to the debug channel (it should be either 'True' or 'False');
-- JAMBABOT_DEBUG_URL: The URL provided by Slack - this one is used for debug purposes (only used if JAMBABOT_DEBUG is true);
-- JAMBABOT_PROD_URL: The URL provided by Slack - this is one is used for production.
+To run it, you must define a file named "variables.js", following the stub file that you can use to guide you, "variables.js.stub".
 
 After defining the necessary variables, the script is run using:
 
