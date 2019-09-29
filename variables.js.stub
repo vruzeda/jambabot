@@ -6,10 +6,20 @@ module.exports = {
   JAMBABOT_DEBUG_URL: 'Incoming Webhook URL for development',
   JAMBABOT_PROD_URL: 'Incoming Webhook URL for production',
 
-  JAMBABOT_USER_TOKEN: 'Token for userbot integration',
+  BOT_CONFIGURATIONS: [
+    {
+      TEAM_NAME: 'Slack team name',
+      APP_CLIENT_ID: 'Slack app client ID',
+      APP_CLIENT_SECRET: 'Slack app client secret',
+      APP_OAUTH_REDIRECT_URI: 'Slack app OAuth redirect URI',
+      APP_SIGNING_SECRET: 'Slack app signing secret',
+    },
+  ],
+
+  PORT: 6001,
 
   GOOGLE_API_KEY: 'Google API Key',
   GOOGLE_CSE_ID: 'Custom Search Engine ID',
 
-  MONGO_CONNECTION_STR: 'mongodb://localhost/jambadb'
+  MONGO_CONNECTION_STR: 'mongodb://localhost/jambadb',
 };

@@ -1,14 +1,11 @@
-const mongodb = require('../integrations/mongodb');
 const request = require('request');
+const mongodb = require('../integrations/mongodb');
 
 (() => {
   function checkIfImageExists(image) {
-    console.log(`Checking if ${image} exists...`);
-
     return new Promise((resolve, reject) => {
       request({ url: image }, (error, response) => {
         const exists = (response.statusCode === 200);
-        console.log(`... ${exists ? 'it does.' : 'it doesn\'t.'}`);
         if (exists) {
           resolve(image);
         } else {
@@ -53,13 +50,13 @@ const request = require('request');
           });
       })
       .then(() => 'Acho q ficou bom')
-      .catch(error => error.message);
+      .catch((error) => error.message);
   }
 
   module.exports = {
     pattern: /^add image (.*) (.*)$/,
     handler: addImageForDish,
     description: '*silviao add image [dish name] [dish image URL]* : Persists an image for the specified dish',
-    channels: { silviao: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message'] }
+    channels: { silviao: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message'] },
   };
 })();

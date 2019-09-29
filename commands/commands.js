@@ -1,6 +1,6 @@
 (() => {
-  /* eslint global-require: 0 */
   module.exports = [
+    /* eslint-disable global-require */
     require('./cardapio'),
     require('./addComment'),
     require('./comenta'),
@@ -9,6 +9,7 @@
     require('./upvote'),
     require('./downvote'),
     require('./rating'),
-    require('./help')
+    require('./help'),
+    /* eslint-enable global-require */
   ];
 })();

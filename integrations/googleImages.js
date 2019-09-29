@@ -1,5 +1,5 @@
-const variables = require('../variables');
 const GoogleImages = require('google-images');
+const variables = require('../variables');
 
 (() => {
   let googleImagesClient;
@@ -38,6 +38,6 @@ const GoogleImages = require('google-images');
   }
 
   module.exports = {
-    getRandomImage
+    getRandomImage,
   };
 })();

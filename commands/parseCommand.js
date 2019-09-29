@@ -15,11 +15,12 @@ const isValidCommand = require('./utils/isValidCommand');
     return match;
   }
 
-  /* eslint global-require: 0 */
   function parseCommand(message) {
+    /* eslint-disable global-require */
     const commands = require('./commands');
+    /* eslint-enable global-require */
 
-    const matchingCommand = commands.find(command => matchCommand(command, message));
+    const matchingCommand = commands.find((command) => matchCommand(command, message));
     if (!matchingCommand) {
       return Promise.resolve(undefined);
     }

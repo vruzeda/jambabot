@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
     formattedDate: { type: String, unique: true },
     mainDishes: [String],
     garnishes: [String],
-    salads: [String]
+    salads: [String],
   });
   const Jamba = mongoose.model('Jamba', JambaSchema);
 
@@ -21,39 +21,37 @@ const mongoose = require('mongoose');
         return {
           mainDishes: jamba.mainDishes,
           garnishes: jamba.garnishes,
-          salads: jamba.salads
+          salads: jamba.salads,
         };
       });
   }
 
   function saveJambas(jambas) {
-    return Promise.all(jambas.map(saveJamba));
-  }
+    return Promise.all(jambas.map((jamba) => {
+      const formattedDate = `${jamba.date.getFullYear()}-${jamba.date.getMonth() + 1}-${jamba.date.getDate()}`;
+      const jambaComponents = {
+        $set: {
+          mainDishes: jamba.mainDishes,
+          garnishes: jamba.garnishes,
+          salads: jamba.salads,
+        },
+      };
 
-  function saveJamba(jamba) {
-    const formattedDate = `${jamba.date.getFullYear()}-${jamba.date.getMonth() + 1}-${jamba.date.getDate()}`;
-    const jambaComponents = {
-      $set: {
-        mainDishes: jamba.mainDishes,
-        garnishes: jamba.garnishes,
-        salads: jamba.salads
-      }
-    };
+      return new Promise((resolve, reject) => {
+        Jamba.updateMany({ formattedDate }, jambaComponents, { upsert: true }, (error) => {
+          if (error) {
+            reject(error);
+            return;
+          }
 
-    return new Promise((resolve, reject) => {
-      Jamba.updateMany({ formattedDate }, jambaComponents, { upsert: true }, (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-
-        resolve(true);
+          resolve(true);
+        });
       });
-    });
+    }));
   }
 
   module.exports = {
     findJambaForDate,
-    saveJambas
+    saveJambas,
   };
 })();

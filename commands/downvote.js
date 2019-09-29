@@ -17,13 +17,13 @@ const mongodb = require('../integrations/mongodb');
           });
       })
       .then(() => 'Vixxxxxxi c lascou kkkkk')
-      .catch(error => error.message);
+      .catch((error) => error.message);
   }
 
   module.exports = {
     pattern: /^downvote (.+)$/,
     handler: downvote,
     description: '*silviao downvote [dish name]* : Adds an downvote for the specified dish',
-    channels: { silviao: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message'] }
+    channels: { silviao: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message'] },
   };
 })();

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
     userName: { type: String, required: true },
     dish: { type: String, required: true },
     upvotes: { type: Number, default: 0 },
-    downvotes: { type: Number, default: 0 }
+    downvotes: { type: Number, default: 0 },
   });
   DishRatingSchema.index({ userName: 1, dish: 1 }, { unique: true });
 
@@ -27,42 +27,50 @@ const mongoose = require('mongoose');
   function upvoteDish(userName, dish) {
     return findUserDishRating(userName, dish)
       .then((storedDishRating) => {
+        /* eslint-disable no-param-reassign */
         storedDishRating.upvotes = 1;
         storedDishRating.downvotes = 0;
+        /* eslint-enable no-param-reassign */
         return storedDishRating;
       })
       .catch(() => new DishRating({
         dish: dish.toLowerCase(),
-        userName: userName.toLowerCase()
+        userName: userName.toLowerCase(),
+        upvotes: 1,
+        downvotes: 0,
       }))
-      .then(dishRating => dishRating.save());
+      .then((dishRating) => dishRating.save());
   }
 
   function downvoteDish(userName, dish) {
     return findUserDishRating(userName, dish)
       .then((storedDishRating) => {
+        /* eslint-disable no-param-reassign */
         storedDishRating.upvotes = 0;
         storedDishRating.downvotes = 1;
+        /* eslint-enable no-param-reassign */
         return storedDishRating;
       })
       .catch(() => new DishRating({
         dish: dish.toLowerCase(),
-        userName: userName.toLowerCase()
+        userName: userName.toLowerCase(),
+        upvotes: 0,
+        downvotes: 1,
       }))
-      .then(dishRating => dishRating.save());
+      .then((dishRating) => dishRating.save());
   }
 
   function getDishRating(dish) {
     const query = {
       $match: {
-        dish: dish.toLowerCase()
-      }
+        dish: dish.toLowerCase(),
+      },
     };
 
     const grouping = {
       _id: '$dish',
       upvotes: { $sum: '$upvotes' },
-      downvotes: { $sum: '$downvotes' }
+      downvotes: { $sum: '$downvotes' },
     };
 
     return DishRating.aggregate([query, { $group: grouping }]).exec()
@@ -73,7 +81,7 @@ const mongoose = require('mongoose');
 
         return {
           upvotes: aggregatedDishRatings[0].upvotes,
-          downvotes: aggregatedDishRatings[0].downvotes
+          downvotes: aggregatedDishRatings[0].downvotes,
         };
       });
   }
@@ -81,6 +89,6 @@ const mongoose = require('mongoose');
   module.exports = {
     upvoteDish,
     downvoteDish,
-    getDishRating
+    getDishRating,
   };
 })();

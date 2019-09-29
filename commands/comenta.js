@@ -10,6 +10,6 @@ const mongodb = require('../integrations/mongodb');
     pattern: /^.*(?:comenta)|(?:comentar)|(?:vai dizer)|(?:diria).*$/,
     handler: comenta,
     description: '*silviao comenta*: I have reached sentience, try it out',
-    channels: undefined
+    channels: undefined,
   };
 })();

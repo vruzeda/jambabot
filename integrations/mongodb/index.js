@@ -8,7 +8,7 @@ const variables = require('../../variables');
 
 (() => {
   mongoose.Promise = global.Promise;
-  mongoose.connect(variables.MONGO_CONNECTION_STR);
+  mongoose.connect(variables.MONGO_CONNECTION_STR, { useNewUrlParser: true });
 
   module.exports = {
     isValidDish: Dish.isValidDish,
@@ -25,6 +25,6 @@ const variables = require('../../variables');
     saveJambas: Jamba.saveJambas,
 
     getRandomSilvioComment: SilvioComment.getRandomSilvioComment,
-    addSilvioComment: SilvioComment.addSilvioComment
+    addSilvioComment: SilvioComment.addSilvioComment,
   };
 })();

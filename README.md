@@ -46,14 +46,7 @@ This script implements a reactive bot, answering to simple requests from users.
 There are currently many commands, you can check them out with the command `@silviao ajuda`.
 
 This script was written for run in NodeJS using JavaScript.
-To run it, you must define a file named "variables.js" with these variables defined:
-
-- JAMBABOT_USER_TOKEN: Token for Slacks's userbot integration;
-- GOOGLE_API_KEY: You custom Google's API key (used for image obtention, requires "Google Custom Search Engine API" to be enabled);
-- GOOGLE_CSE_ID: You custom Google's search engine ID (used for image obtention, requires "Image search" to be enabled);
-- MONGO_CONNECTION_STR: An URL for your Mongo database, something like `'mongodb://localhost/jambadb'`.
-
-There's a stub file that you can use to guide you, "variables.js.stub".
+To run it, you must define a file named "variables.js", following the stub file that you can use to guide you, "variables.js.stub".
 
 After implementing this file, you can test your script by running:
 

@@ -4,7 +4,9 @@
   "main": "jambabot.js",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "botkit": "^0.7.4",
+    "botbuilder-adapter-slack": "^1.0.4",
+    "botbuilder-storage-mongodb": "^0.9.5",
+    "botkit": "^4.5.0",
     "express": "^4.16.2",
     "google-images": "^2.1.0",
     "iconv-lite": "^0.4.19",
@@ -15,11 +17,11 @@
     "start": "node jambabot.js",
     "build": "npm run lint",
     "test": "npm run lint",
-    "lint": "node node_modules/eslint/bin/eslint.js *.js commands/**/*.js integrations/**/*.js"
+    "lint": "eslint --ext .js ."
   },
   "devDependencies": {
-    "eslint": "^4.18.2",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.16.0"
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
   }
 }

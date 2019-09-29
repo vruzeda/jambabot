@@ -3,12 +3,6 @@ const jambalaya = require('../../integrations/jambalaya');
 const mongodb = require('../../integrations/mongodb');
 
 (() => {
-  function getJambaPostForDate(date) {
-    return checkValidDate(date)
-      .then(() => getJambaForDate(date))
-      .then(jamba => generatePostText(date, jamba));
-  }
-
   function checkValidDate(date) {
     return new Promise((resolve, reject) => {
       // Check if the date is in the current month (and year, just for safety)
@@ -31,10 +25,10 @@ const mongodb = require('../../integrations/mongodb');
   function getJambaForDate(date) {
     return jambalaya.getJambaForDate(date)
       .catch(() => {
-        throw new Error('O site do Jamba está fora do ar :cry:\n' +
-          'Dá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\n' +
-          'Ou liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\n(Ou <#C0HNHSCP9>, ' +
-          'fazer o quê :stuck_out_tongue_winking_eye:)');
+        throw new Error('O site do Jamba está fora do ar :cry:\n'
+          + 'Dá uma checada no <https://www.ifood.com.br/delivery/campinas-sp/jambalaya-refeicoes-jardim-flamboyant|iFood>...\n'
+          + 'Ou liga lá: <tel:1932513928|(19) 3251-3928> | <tel:1932537573|(19) 3253-7573>\n\n(Ou <#C0HNHSCP9>, '
+          + 'fazer o quê :stuck_out_tongue_winking_eye:)');
       })
       .then((jamba) => {
         if (!jamba) {
@@ -45,20 +39,32 @@ const mongodb = require('../../integrations/mongodb');
       });
   }
 
-  function generatePostText(date, jamba) {
-    return Promise.all([
-      getImageForMainDishes(jamba.mainDishes),
-      getRatingsForMainDishes(jamba.mainDishes),
-    ])
-      .then(([mainDishesImages, mainDishesRatings]) => {
-        const post = {
-          header: generatePostHeader(date),
-          body: generatePostBody(jamba, mainDishesImages, mainDishesRatings),
-          footer: generatePostFooter(date),
-        };
+  function getImageForMainDishes(mainDishes) {
+    return Promise.all(mainDishes.map((mainDish) => mongodb.getImageForDish(mainDish)
+      .then((preDefinedImage) => {
+        if (!preDefinedImage) {
+          throw new Error('No predefined image');
+        }
 
-        return post.header + post.body.join('\n') + post.footer;
-      });
+        return preDefinedImage;
+      })
+      .catch(() => googleImages.getRandomImage(mainDish))));
+  }
+
+  function getRatingsForMainDish(mainDish) {
+    return mongodb.getDishRating(mainDish)
+      .then((rating) => {
+        if (!rating) {
+          throw new Error(`No rating for dish ${mainDish}`);
+        }
+
+        return rating;
+      })
+      .catch(() => ({ upvotes: 0, downvotes: 0 }));
+  }
+
+  function getRatingsForMainDishes(mainDishes) {
+    return Promise.all(mainDishes.map(getRatingsForMainDish));
   }
 
   function generatePostHeader(date) {
@@ -73,11 +79,17 @@ const mongodb = require('../../integrations/mongodb');
 
     if (date.getTime() < today.getTime()) {
       return '*TOO LATE!* :silviao-ri:\n\n';
-    } else if (date.getTime() >= tomorrow.getTime()) {
+    }
+
+    if (date.getTime() >= tomorrow.getTime()) {
       return '*SPOILER* :silviao-ri:\n\n';
-    } else if (today.getHours() >= 10 && today.getHours() < 11) {
+    }
+
+    if (today.getHours() >= 10 && today.getHours() < 11) {
       return '*AINDA NÃO PEDIU?*\n\n';
-    } else if (today.getHours() >= 11) {
+    }
+
+    if (today.getHours() >= 11) {
       return '*TOO LATE!* :silviao-ri:\n\n';
     }
 
@@ -127,36 +139,26 @@ const mongodb = require('../../integrations/mongodb');
     return body;
   }
 
-  function getImageForMainDishes(mainDishes) {
-    return Promise.all(mainDishes.map(getImageForMainDish));
+  function generatePostText(date, jamba) {
+    return Promise.all([
+      getImageForMainDishes(jamba.mainDishes),
+      getRatingsForMainDishes(jamba.mainDishes),
+    ])
+      .then(([mainDishesImages, mainDishesRatings]) => {
+        const post = {
+          header: generatePostHeader(date),
+          body: generatePostBody(jamba, mainDishesImages, mainDishesRatings),
+          footer: generatePostFooter(date),
+        };
+
+        return post.header + post.body.join('\n') + post.footer;
+      });
   }
 
-  function getImageForMainDish(mainDish) {
-    return mongodb.getImageForDish(mainDish)
-      .then((preDefinedImage) => {
-        if (!preDefinedImage) {
-          throw new Error('No predefined image');
-        }
-
-        return preDefinedImage;
-      })
-      .catch(() => googleImages.getRandomImage(mainDish));
-  }
-
-  function getRatingsForMainDishes(mainDishes) {
-    return Promise.all(mainDishes.map(getRatingsForMainDish));
-  }
-
-  function getRatingsForMainDish(mainDish) {
-    return mongodb.getDishRating(mainDish)
-      .then((rating) => {
-        if (!rating) {
-          throw new Error(`No rating for dish ${mainDish}`);
-        }
-
-        return rating;
-      })
-      .catch(() => ({ upvotes: 0, downvotes: 0 }));
+  function getJambaPostForDate(date) {
+    return checkValidDate(date)
+      .then(() => getJambaForDate(date))
+      .then((jamba) => generatePostText(date, jamba));
   }
 
   module.exports = getJambaPostForDate;

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 (() => {
   const DishImageSchema = mongoose.Schema({
     dish: { type: String, unique: true },
-    image: String
+    image: String,
   });
   const DishImage = mongoose.model('DishImage', DishImageSchema);
 
@@ -20,21 +20,23 @@ const mongoose = require('mongoose');
 
   function getImageForDish(dish) {
     return findDishImage(dish)
-      .then(dishImage => dishImage.image);
+      .then((dishImage) => dishImage.image);
   }
 
   function addImageForDish(dish, image) {
     return findDishImage(dish)
       .then((storedDishImage) => {
+        /* eslint-disable no-param-reassign */
         storedDishImage.image = image;
+        /* eslint-enable no-param-reassign */
         return storedDishImage;
       })
       .catch(() => new DishImage({ dish: dish.toLowerCase(), image }))
-      .then(dishImage => dishImage.save());
+      .then((dishImage) => dishImage.save());
   }
 
   module.exports = {
     getImageForDish,
-    addImageForDish
+    addImageForDish,
   };
 })();

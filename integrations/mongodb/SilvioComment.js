@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 (() => {
   const SilvioCommentSchema = mongoose.Schema({
-    comment: { type: String }
+    comment: { type: String },
   });
   const SilvioComment = mongoose.model('SilvioComment', SilvioCommentSchema);
 
@@ -24,6 +24,6 @@ const mongoose = require('mongoose');
 
   module.exports = {
     getRandomSilvioComment,
-    addSilvioComment
+    addSilvioComment,
   };
 })();

@@ -16,14 +16,14 @@ const mongodb = require('../integrations/mongodb');
             throw new Error('Não sei de nada....\nMais é show....');
           });
       })
-      .then(storedDishRating => `Hummm....\n:arrow_up_small: ${storedDishRating.upvotes} :arrow_down_small: ${storedDishRating.downvotes}`)
-      .catch(error => error.message);
+      .then((storedDishRating) => `Hummm....\n:arrow_up_small: ${storedDishRating.upvotes} :arrow_down_small: ${storedDishRating.downvotes}`)
+      .catch((error) => error.message);
   }
 
   module.exports = {
     pattern: /^rating (.+)$/,
     handler: rating,
     description: '*silviao rating [dish name]* : Gets the upvotes/downvotes ratings for the specified dish',
-    channels: { silviao: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message'] }
+    channels: { silviao: ['#delicias-do-jamba', '#dev-delicias-do-jamba', '@direct_message'] },
   };
 })();

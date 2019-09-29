@@ -1,29 +1,19 @@
 module.exports = {
-  "env": {
-    "browser": true,
-    "node": true,
-    "es6": true,
-    "amd": true,
-    "mocha": true,
-    "jasmine": true,
-    "protractor": true
+  env: {
+    browser: true,
+    es6: true,
   },
-  "extends": "airbnb-base",
-  "globals": {
-    "sinon": true,
-    "inject": true,
-    "should": true
+  extends: [
+    'airbnb-base',
+  ],
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
   },
-
-  "parserOptions": {
-    "ecmaVersion": 6
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
   },
-
-  "rules": {
-    "comma-dangle": 0,
-    "no-use-before-define": [ "error", { "functions": false, "classes": true } ],
-    "no-console": ["error", {"allow": [ "warn", "error", "info", "debug", "log" ] } ],
-    "no-param-reassign": ["error", { "props": false }],
-    "radix": ["error", "as-needed"]
-  }
+  rules: {
+  },
 };

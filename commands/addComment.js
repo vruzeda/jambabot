@@ -4,10 +4,7 @@ const mongodb = require('../integrations/mongodb');
   function addComment(_message, comment) {
     return mongodb.addSilvioComment(comment)
       .then(() => 'Show')
-      .catch((error) => {
-        console.log(error);
-        return 'Não entendi nada....';
-      });
+      .catch(() => 'Não entendi nada....');
   }
 
   module.exports = {
@@ -15,6 +12,6 @@ const mongodb = require('../integrations/mongodb');
     handler: addComment,
     description: '*silviao add comment*: Adds a new comment',
     channels: ['#admin'],
-    acceptsPreFormattedText: true
+    acceptsPreFormattedText: true,
   };
 })();
