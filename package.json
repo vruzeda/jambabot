@@ -10,7 +10,7 @@
     "express": "^4.16.2",
     "google-images": "^2.1.0",
     "iconv-lite": "^0.4.19",
-    "mongoose": "^5.7.1",
+    "mongoose": "^5.7.5",
     "request": "^2.88.0"
   },
   "scripts": {
